@@ -12,7 +12,7 @@ function setup() {
   const t = key => copy[language][key] ?? key;
   let episodes = [], clock = null, episode = null, loading = false;
   const clocks = new Map(), scrollPositions = new Map();
-  let active = !panel.hidden, inView = false, frameId = 0, lastTime = 0, expanded = false;
+  let active = !panel.hidden, inView = false, frameId = 0, lastTime = 0, expanded = false, manualPause = false;
   let pageKey = '', uiKey = '', animationKey = '', motion = null, cursor = {x:40,y:100};
   const element = (tag, className, text) => {
     const node = document.createElement(tag);
@@ -48,6 +48,7 @@ function setup() {
     qa('[data-ws-copy]').forEach(node => { node.textContent = t(node.dataset.wsCopy); });
     qa('[data-ws-label]').forEach(node => node.setAttribute('aria-label', t(node.dataset.wsLabel)));
     q('.ws-address').textContent = t('address');
+    if (episode) q('.ws-task').textContent = language === 'zh' ? episode.taskZh : episode.task;
     q('.ws-observation-detail summary').textContent = t('observation');
     shell.setAttribute('aria-label', language === 'zh' ? 'WebShop 动态轨迹回放' : 'WebShop trajectory replay');
     q('.ws-episode').setAttribute('aria-label', t('episode'));
@@ -91,16 +92,18 @@ function setup() {
   function selectEpisode(id) {
     if (episode) { pause(); scrollPositions.set(episode.id, viewport.scrollTop); }
     episode = episodes.find(item => item.id === id);
+    manualPause = false;
     if (!clocks.has(id)) clocks.set(id, new WebShopClock(episode, reduced.matches));
     clock = clocks.get(id); clock.pause();
     q('.ws-episode').value = id;
-    q('.ws-task').textContent = episode.task;
+    q('.ws-task').textContent = language === 'zh' ? episode.taskZh : episode.task;
     q('.ws-range').max = episode.steps.length;
     q('.ws-range').disabled = false;
     populatePicker();
     q('.ws-speed').value = clock.speed;
     pageKey = ''; uiKey = ''; animationKey = ''; motion = null;
     buildActions(); render(); viewport.scrollTop = scrollPositions.get(id) || 0;
+    resumeAutomatically();
   }
   async function load() {
     if (loading || episodes.length) return;
@@ -116,7 +119,7 @@ function setup() {
       episodes = []; q('.ws-load-error').hidden = false;
       page.replaceChildren(element('p', 'ws-home-body', t('loadError')));
       console.warn('WebShop replay data unavailable:', error.message);
-    } finally { loading = false; }
+    } finally { loading = false; resumeAutomatically(); }
   }
   function icon(kind) {
     const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
@@ -376,6 +379,7 @@ function setup() {
   }
   function seek(value) {
     if (!clock) return;
+    manualPause = true;
     clock.seek(value); clearMotion(); stopFrame(); render();
     const step = episode.steps[clock.selectedStep];
     if (step?.action?.type === 'click') {
@@ -395,7 +399,7 @@ function setup() {
     const delta = lastTime ? Math.min(.1,(now-lastTime)/1000) : 0; lastTime = now;
     clock.tick(delta); render(); requestFrame();
   }
-  q('.ws-play').addEventListener('click',()=>clock?.playing?pause():play());
+  q('.ws-play').addEventListener('click',()=>{manualPause=Boolean(clock?.playing);clock?.playing?pause():play();});
   q('.ws-previous').addEventListener('click',()=>seek(clock.acting?clock.stepIndex:clock.snapshot-1));
   q('.ws-next').addEventListener('click',()=>seek(clock.snapshot+1));
   q('.ws-initial').addEventListener('click',()=>seek(0));
@@ -423,14 +427,22 @@ function setup() {
   shell.addEventListener('keydown',event=>{
     if (event.key === 'Escape' && expanded) { event.preventDefault(); expand(false); return; }
     if (/INPUT|SELECT|BUTTON|SUMMARY/.test(event.target.tagName)||!clock) return;
-    if(event.code==='Space'){event.preventDefault();clock.playing?pause():play();}
+    if(event.code==='Space'){event.preventDefault();manualPause=clock.playing;clock.playing?pause():play();}
     if(event.code==='ArrowLeft'){event.preventDefault();seek(clock.acting?clock.stepIndex:clock.snapshot-1);}
     if(event.code==='ArrowRight'){event.preventDefault();seek(clock.snapshot+1);}
   });
   document.addEventListener('scope:languagechange',event=>{language=event.detail.language;applyCopy();});
-  document.addEventListener('scope:replaytabchange',event=>{active=event.detail.tab==='webshop';if(!active) pause();else load();});
-  new IntersectionObserver(([entry])=>{inView=entry.isIntersecting;if(!inView) pause();}, {threshold:.01}).observe(shell);
-  document.addEventListener('visibilitychange',()=>{if(document.hidden)pause();});
+  function resumeAutomatically() {
+    if (!active || !inView || document.hidden) return;
+    if (!episodes.length) { if (!loading) load(); return; }
+    if (!manualPause && !reduced.matches && !clock.playing) play();
+  }
+  document.addEventListener('scope:replaytabchange',event=>{active=event.detail.tab==='webshop';if(!active)pause();else resumeAutomatically();});
+  new IntersectionObserver(([entry])=>{
+    inView=entry.isIntersecting && entry.intersectionRatio >= .08;
+    if(!inView)pause();else resumeAutomatically();
+  }, {threshold:[0,.08]}).observe(q('.ws-browser'));
+  document.addEventListener('visibilitychange',()=>{if(document.hidden)pause();else resumeAutomatically();});
   reduced.addEventListener('change',event=>{clocks.forEach(c=>{c.reducedMotion=event.matches;});clearMotion();render();});
   window.addEventListener('pagehide',pause);
   applyCopy(); if(active) load();

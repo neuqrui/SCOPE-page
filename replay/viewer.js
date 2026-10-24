@@ -26,6 +26,7 @@ async function initialize() {
   let loadGeneration = 0;
   let room = null, roomPromise = null, renderState = 'idle', loadPercent = 0;
   let inView = false, frameId = 0, lastTime = 0, returning = null;
+  let active = !document.querySelector('#replay-alfworld').hidden, manualPause = false;
   let renderedKey = '', fpsStarted = 0, fpsFrames = 0;
   let visibleStep = -1;
   let fullscreen = false, dragging = null;
@@ -73,6 +74,7 @@ async function initialize() {
   function selectEpisode(id) {
     if (id === episode.id) return;
     const reloadRoom = renderState !== 'idle';
+    manualPause = false;
     clock.pause(); stopFrame(); returning = null; dragging = null; loadGeneration++;
     room?.dispose(); room = null; roomPromise = null;
     q('.alf-canvas')?.remove();
@@ -172,7 +174,7 @@ async function initialize() {
           roomPromise = null; stopFrame(); updateUI();
         });
         bindLook(canvas); renderState = 'ready'; updateUI();
-        room.draw(clock); requestDraw(); return room;
+        room.draw(clock); resumeAutomatically(); requestDraw(); return room;
       } catch (error) {
         if (generation !== loadGeneration) return null;
         root.dataset.failure = error.code === 'WEBGL_UNAVAILABLE' ? 'unsupported' : 'load';
@@ -215,6 +217,7 @@ async function initialize() {
 
   function pause() { clock.pause(); returning = null; stopFrame(); updateUI(); requestDraw(); }
   function seek(snapshot) {
+    manualPause = true;
     clock.seek(snapshot); returning = null;
     if (room) { room.lookYaw = 0; room.lookPitch = 0; }
     stopFrame(); updateUI(); requestDraw();
@@ -243,7 +246,7 @@ async function initialize() {
   }
 
   q('.alf-load-button').addEventListener('click', loadRoom);
-  q('.alf-play').addEventListener('click', () => clock.playing ? pause() : play());
+  q('.alf-play').addEventListener('click', () => { manualPause = clock.playing; clock.playing ? pause() : play(); });
   q('.alf-previous').addEventListener('click', () => seek(clock.phase === 'action' ? clock.stepIndex : clock.snapshot - 1));
   q('.alf-next').addEventListener('click', () => seek(clock.phase === 'action' ? clock.stepIndex + 1 : clock.snapshot + 1));
   q('.alf-step-range').addEventListener('input', (event) => seek(Number(event.target.value)));
@@ -268,16 +271,26 @@ async function initialize() {
   });
   shell.addEventListener('keydown', (event) => {
     if (/INPUT|SELECT|BUTTON|SUMMARY/.test(event.target.tagName)) return;
-    if (event.code === 'Space') { event.preventDefault(); clock.playing ? pause() : play(); }
+    if (event.code === 'Space') { event.preventDefault(); manualPause = clock.playing; clock.playing ? pause() : play(); }
     else if (event.code === 'ArrowLeft') { event.preventDefault(); seek(clock.snapshot - 1); }
     else if (event.code === 'ArrowRight') { event.preventDefault(); seek(clock.snapshot + 1); }
   });
+  function resumeAutomatically() {
+    if (!active || !inView || document.hidden) return;
+    if (renderState === 'idle') { loadRoom(); return; }
+    if (renderState === 'ready' && !manualPause && !reducedMotion.matches && !clock.playing) play();
+  }
   new IntersectionObserver(([entry]) => {
-    inView = entry.isIntersecting;
-    if (!inView) { clock.pause(); stopFrame(); updateUI(); } else requestDraw();
-  }, { threshold: .01 }).observe(shell);
-  document.addEventListener('scope:replaytabchange', (event) => { if (event.detail.tab !== 'alfworld') { inView = false; pause(); } });
-  document.addEventListener('visibilitychange', () => { if (document.hidden) pause(); else requestDraw(); });
+    inView = active && entry.isIntersecting && entry.intersectionRatio >= .08;
+    if (!inView) { clock.pause(); stopFrame(); updateUI(); }
+    else { resumeAutomatically(); requestDraw(); }
+  }, { threshold: [0,.08] }).observe(stage);
+  document.addEventListener('scope:replaytabchange', (event) => {
+    active = event.detail.tab === 'alfworld';
+    if (!active) { inView = false; pause(); }
+    else resumeAutomatically();
+  });
+  document.addEventListener('visibilitychange', () => { if (document.hidden) pause(); else { resumeAutomatically(); requestDraw(); } });
   document.addEventListener('scope:languagechange', (event) => { language = event.detail.language; applyCopy(); });
   reducedMotion.addEventListener('change', (event) => { clocks.forEach(item => { item.reducedMotion = event.matches; }); });
   window.addEventListener('pagehide', (event) => {

@@ -152,7 +152,7 @@
       const code = document.createElement('pre');
       code.textContent = config.bibtex;
       details.append(summary, code);
-      $('.closing').after(details);
+      $('#analysis').after(details);
     }
     if (!config.anonymous) $('#publication-status').textContent = language === 'zh' ? '研究项目主页' : 'Research project';
   }
@@ -200,7 +200,6 @@
   window.matchMedia('(min-width: 701px)').addEventListener('change', (event) => { if (event.matches) closeMenu(); });
   $$('[data-lang]').forEach((button) => button.addEventListener('click', () => applyLanguage(button.dataset.lang, true)));
   $$('[data-model]').forEach((button) => button.addEventListener('click', () => { modelId = button.dataset.model; renderResults(); }));
-  $$('.paper-link').forEach((link) => { link.href = config.paperUrl; });
 
   $$('.figure-open').forEach((button) => button.addEventListener('click', () => {
     figureTrigger = button;

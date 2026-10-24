@@ -7,6 +7,7 @@
       "id": "fd851003-fc7a-4ee7-b7fa-c926fc2aa2e3",
       "source": "001_fd851003.html",
       "task": "Find me quick release, hands free iphone accessories for wireless charging with color: freemount, and style: dash, and price lower than 70.00 dollars",
+      "taskZh": "寻找支持无线充电、快拆与免手持使用的 iPhone 配件. 颜色选项为 freemount, 款式选项为 dash, 价格低于 70 美元.",
       "constraints": {
         "style": "dash",
         "color": "freemount",
@@ -536,7 +537,7 @@
       "outcome": "success",
       "label": {
         "en": "Car mount · dash / freemount",
-        "zh": "车载支架 · dash / freemount"
+        "zh": "车载支架 · 仪表台款"
       }
     },
     {
@@ -544,6 +545,7 @@
       "id": "f5bbec07-b589-4482-babe-591830a5e748",
       "source": "001_f5bbec07.html",
       "task": "Find me sconces for dining room, living room with color: gold, and price lower than 90.00 dollars",
+      "taskZh": "寻找适合餐厅和客厅使用的金色壁灯, 价格低于 90 美元.",
       "constraints": {
         "color": "gold",
         "priceBelow": 90.0
@@ -940,6 +942,7 @@
       "id": "ff302c46-55ab-4478-afc9-48ac4f74a0f3",
       "source": "001_ff302c46.html",
       "task": "Find me wash cold, machine wash men's shirts with polyester heathers, heathers cotton, cotton heather, needle sleeve, classic fit with color: olive, and fit type: men, and size: 3t, and price lower than 50.00 dollars",
+      "taskZh": "寻找可冷水机洗的经典版型男士衬衫, 要求混色聚酯和混色棉面料, 袖型关键词为 needle sleeve. 颜色为橄榄绿, 版型选项为 men, 尺码为 3t, 价格低于 50 美元.",
       "constraints": {
         "color": "olive",
         "size": "3t",
@@ -1648,7 +1651,7 @@
       "outcome": "success",
       "label": {
         "en": "T-shirt · men / olive / 3t",
-        "zh": "T 恤 · men / olive / 3t"
+        "zh": "男士上衣 · 橄榄绿 · 3t"
       }
     },
     {
@@ -1656,6 +1659,7 @@
       "id": "ffa83fe6-46e1-476f-bbb7-8e668728493d",
       "source": "001_ffa83fe6.html",
       "task": "Find me screen protectors with tempered glass, glass screen, and price lower than 40.00 dollars",
+      "taskZh": "寻找采用钢化玻璃的屏幕保护膜, 价格低于 40 美元.",
       "constraints": {
         "priceBelow": 40.0
       },
@@ -1945,6 +1949,7 @@
       "id": "0042de51-367b-41bc-bf7e-dee44c925b3f",
       "source": "000_0042de51.html",
       "task": "Find me machine wash men's pants with drawstring closure, elastic waist, polyester spandex with color: black, and size: large, and price lower than 50.00 dollars",
+      "taskZh": "寻找可机洗的男士长裤, 要求抽绳闭合、弹性腰围和聚酯纤维与氨纶面料. 颜色为黑色, 尺码为大号, 价格低于 50 美元.",
       "constraints": {
         "color": "black",
         "size": "large",
@@ -2470,7 +2475,7 @@
       "outcome": "failure",
       "label": {
         "en": "Pants · black / large",
-        "zh": "长裤 · black / large"
+        "zh": "男士长裤 · 黑色 · 大号"
       }
     },
     {
@@ -2478,6 +2483,7 @@
       "id": "16b0579d-41b3-4234-96e9-98f3ea89945c",
       "source": "000_16b0579d.html",
       "task": "Find me loose fit, light weight, slim fit men's henleys with long sleeve, short sleeve, contrast color, unique design for gym workout, teen girls with color: c-gray, and size: large, and price lower than 40.00 dollars",
+      "taskZh": "寻找用于健身训练的轻薄 Henley 上衣, 需求包含宽松与修身版型、长袖与短袖、撞色及独特设计, 同时包含男款与少女适用的描述. 颜色选项为 c-gray, 尺码为大号, 价格低于 40 美元.",
       "constraints": {
         "color": "c-gray",
         "size": "large",
