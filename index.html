@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#faf9f6">
+  <meta name="description" content="SCOPE: selective critical-step on-policy self-distillation for agentic reinforcement learning. Learn from step-specific hindsight for stronger, more efficient task completion.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="SCOPE · Learn where it matters">
+  <meta property="og:description" content="Selective Critical-Step On-Policy Self-Distillation for Agentic Reinforcement Learning.">
+  <title>SCOPE · Selective Critical-Step On-Policy Self-Distillation</title>
+  <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg">
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./replay/viewer.css?v=gallery-1">
+  <link rel="stylesheet" href="./method/flow.css">
+  <link rel="stylesheet" href="./webshop/viewer.css?v=gallery-1">
+  <script type="importmap">{"imports":{"three":"./assets/vendor/three/three.module.js","three/addons/":"./assets/vendor/three/addons/"}}</script>
+  <script src="./config.js" defer></script>
+  <script src="./data.js" defer></script>
+  <script src="./content.js" defer></script>
+  <script src="./app.js" defer></script>
+  <script type="module" src="./replay/viewer.js?v=gallery-1"></script>
+  <script type="module" src="./method/flow.js"></script>
+  <script type="module" src="./replay/tabs.js"></script>
+  <script type="module" src="./webshop/viewer.js?v=gallery-1"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main" data-i18n="skip">Skip to content</a>
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="#" class="brand" aria-label="SCOPE">
+        <svg class="brand-symbol" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="11"/><path d="M16 0v7M16 25v7M0 16h7M25 16h7"/><circle class="brand-center" cx="16" cy="16" r="3"/></svg>
+        <span>SCOPE<span class="brand-period">.</span></span>
+      </a>
+      <nav id="navigation" aria-label="Main navigation">
+        <a href="#overview" data-i18n="nav.overview">Overview</a>
+        <a href="#method" data-i18n="nav.method">Method</a>
+        <a href="#replay" data-i18n="nav.replay">Replay</a>
+        <a href="#results" data-i18n="nav.results">Results</a>
+        <a href="#analysis" data-i18n="nav.analysis">Analysis</a>
+      </nav>
+      <div class="header-controls">
+        <div class="language-switch" role="group" aria-label="Language / 语言">
+          <button type="button" data-lang="en" aria-pressed="true" lang="en">EN</button>
+          <span aria-hidden="true">/</span>
+          <button type="button" data-lang="zh" aria-pressed="false" lang="zh-CN">中文</button>
+        </div>
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="navigation" data-i18n-aria="menu"><span></span><span></span></button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-inner">
+        <p class="hero-eyebrow"><span class="status-dot" aria-hidden="true"></span><span data-i18n="hero.eyebrow">Learning from experience. One critical step at a time.</span></p>
+        <h1 id="hero-title">SCOPE<span class="hero-period">.</span></h1>
+        <p class="paper-title" data-i18n="hero.title">Selective Critical-Step On-Policy Self-Distillation for Agentic Reinforcement Learning</p>
+        <p class="hero-description" data-i18n="hero.description">Better agents learn where it matters. SCOPE turns self-generated hindsight into targeted corrections at critical error steps.</p>
+        <div class="authors" id="authors" data-i18n="authors">Anonymous Authors</div>
+        <div class="hero-actions" id="resource-links">
+          <a class="button button-primary paper-link" href="./SCOPE.pdf" target="_blank" rel="noopener"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 2h7l4 4v12H5zM12 2v5h4M8 11h5M8 14h5"/></svg><span data-i18n="paper">Read the paper</span><span aria-hidden="true">↗</span></a>
+          <a class="button button-secondary" href="#method"><span data-i18n="explore">Explore the method</span><span aria-hidden="true">↓</span></a>
+        </div>
+      </div>
+      <div class="hero-results container">
+        <p class="results-context"><span class="tiny-cross" aria-hidden="true">✦</span> <span data-i18n="hero.context">Qwen2.5-3B · Main results at training step 150</span></p>
+        <div class="hero-metrics">
+          <div class="hero-metric"><p data-i18n="metric.alf">ALFWorld success</p><div class="metric-value">97.7<span>%</span></div><span class="metric-delta" data-i18n="metric.alfDelta">+5.9 pp over SEED</span></div>
+          <div class="hero-metric"><p data-i18n="metric.web">WebShop success</p><div class="metric-value">85.2<span>%</span></div><span class="metric-delta" data-i18n="metric.webDelta">+6.3 pp over SEED</span></div>
+        </div>
+        <p class="metric-note" data-i18n="metric.note">At evaluation: ordinary policy inputs, without hindsight skills or analyzer calls.</p>
+      </div>
+    </section>
+
+    <section id="overview" class="section container" aria-labelledby="overview-title">
+      <div class="section-heading">
+        <p class="section-label"><span>01</span><span data-i18n="overview.label">The motivation</span></p>
+        <h2 id="overview-title" data-i18n="overview.title">An outcome tells only part of the story.</h2>
+        <p class="section-description" data-i18n="overview.description">A successful trajectory can contain mistakes. A failed one can contain good decisions. Corrective guidance needs to match the step that actually needs it.</p>
+      </div>
+      <div class="insight-pair">
+        <article><span class="insight-symbol" aria-hidden="true">≠</span><h3 data-i18n="overview.firstTitle">Success ≠ every step is right</h3><p data-i18n="overview.firstBody">In the annotated WebShop trajectories, 29.8% of steps in successful episodes are erroneous; 42.4% of steps in failed episodes are correct.</p></article>
+        <article><span class="insight-symbol" aria-hidden="true">↗</span><h3 data-i18n="overview.secondTitle">A skill ≠ guidance for every step</h3><p data-i18n="overview.secondBody">Skill-unrelated steps account for 57.9% of nonzero sampled-token gaps. Applying trajectory-level skills everywhere can propagate off-target signals.</p></article>
+      </div>
+      <figure class="paper-figure">
+        <button class="figure-open" type="button" data-figure="overview" aria-haspopup="dialog" aria-describedby="caption-overview"><img src="./assets/figures/scope-intro-overview.png" width="2320" height="1320" loading="lazy" decoding="async" data-i18n-alt="alt.overview" alt="SCOPE motivation and main results."><span class="zoom-label"><span aria-hidden="true">⤢</span> <span data-i18n="figure.zoom">View larger</span></span></button>
+        <figcaption id="caption-overview" data-i18n="fig.overview">Figure 1 · Motivation and results. Outcome–step mismatch, off-target skill signals, training dynamics, and Qwen2.5-3B main results.</figcaption>
+      </figure>
+    </section>
+
+    <section id="method" class="section section-tinted" aria-labelledby="method-title">
+      <div class="container">
+        <div class="section-heading">
+          <p class="section-label"><span>02</span><span data-i18n="method.label">The approach</span></p>
+          <h2 id="method-title" data-i18n="method.title">Find the error. Focus the learning.</h2>
+          <p class="section-description" data-i18n="method.description">The same policy acts, analyzes its own experience, and learns from step-specific skills. Auxiliary distillation is applied only at selected error steps.</p>
+        </div>
+        <div id="method-flow" class="mf" data-stage="0" data-playing="false" aria-labelledby="flow-title">
+          <header class="mf-header"><div><p class="mf-eyebrow" data-flow-copy="interactive">INTERACTIVE METHOD</p><h3 id="flow-title" data-flow-copy="title">One policy. A focused learning loop.</h3><p data-flow-copy="subtitle">Follow one training iteration, from experience to correction.</p></div><button type="button" class="mf-round mf-top-play"><span class="mf-round-dot" aria-hidden="true"></span><span class="mf-top-play-text">Play the flow</span></button></header>
+          <div class="mf-warmup"><span data-flow-copy="offline">FIRST, OFFLINE</span><div><strong data-flow-copy="warmup">Teach the policy to analyze its own experience.</strong><p data-flow-copy="warmupBody">A small supervised warm-up initializes error localization and skill generation. External annotation ends here.</p></div><span aria-hidden="true">↘</span></div>
+          <div class="mf-body">
+            <div class="mf-board" role="group" aria-label="SCOPE training flow" data-flow-label="title">
+              <svg class="mf-connections" viewBox="0 0 1000 560" preserveAspectRatio="none" aria-hidden="true">
+                <defs><marker id="flow-arrow" markerWidth="7" markerHeight="7" refX="5.5" refY="3.5" orient="auto"><path d="M0 0 7 3.5 0 7" fill="none" stroke="currentColor" stroke-width="1"/></marker></defs>
+                <path class="mf-path" data-edge="1" d="M290 145H375"/>
+                <path class="mf-path" data-edge="2" d="M625 145H710"/>
+                <path class="mf-path mf-green-path" data-edge="3" d="M165 235V286Q165 300 180 300H348Q365 300 365 317V400H375"/>
+                <path class="mf-path" data-edge="4" d="M835 235V325"/>
+                <path class="mf-path mf-green-path" data-edge="4" d="M625 400H710"/>
+                <path class="mf-path mf-return-path" data-edge="4" d="M835 475V510Q835 530 815 530H38Q18 530 18 510V165Q18 145 40 145"/>
+                <path class="mf-packet" data-edge="1" d="M290 145H375" pathLength="100"/>
+                <path class="mf-packet" data-edge="2" d="M625 145H710" pathLength="100"/>
+                <path class="mf-packet mf-green-path" data-edge="3" d="M165 235V286Q165 300 180 300H348Q365 300 365 317V400H375" pathLength="100"/>
+                <path class="mf-packet" data-edge="4" d="M835 235V325" pathLength="100"/>
+                <path class="mf-packet mf-green-path" data-edge="4" d="M625 400H710" pathLength="100"/>
+                <path class="mf-packet mf-return-path" data-edge="4" d="M835 475V510Q835 530 815 530H38Q18 530 18 510V165Q18 145 40 145" pathLength="100"/>
+              </svg>
+              <button class="mf-node mf-rollout" type="button" data-flow-stage="0" aria-pressed="true"><span class="mf-node-top"><span class="mf-node-number">01</span><span class="mf-symbol" aria-hidden="true">π ↔ ◇</span></span><strong data-flow-copy="rollout">Collect experience</strong><span class="mf-node-sub" data-flow-copy="rolloutSmall">Policy ↔ Environment</span><span class="mf-mini-trajectory"><span class="mf-outcome">τ₁ ✓</span><i>a₁</i><i class="mf-error">a₂</i><i>a₃</i><i>a₄</i><i>a₅</i><i>a₆</i></span><span class="mf-mini-trajectory"><span class="mf-outcome mf-failure">τ₂ ×</span><i>a₁</i><i>a₂</i><i>a₃</i><i class="mf-error">a₄</i><i>a₅</i><i>a₆</i></span></button>
+              <button class="mf-node mf-analyze" type="button" data-flow-stage="1" aria-pressed="false"><span class="mf-node-top"><span class="mf-node-number">02</span><span class="mf-scan-symbol" aria-hidden="true">⌖</span></span><strong data-flow-copy="analyze">Find critical errors</strong><span class="mf-node-sub" data-flow-copy="analyzeSmall">Hindsight → step-specific skills</span><span class="mf-skill"><span>t = 2</span><span>s₂</span><b>↗</b></span><span class="mf-skill"><span>t = 4</span><span>s₄</span><b>↗</b></span></button>
+              <button class="mf-node mf-distill" type="button" data-flow-stage="2" aria-pressed="false"><span class="mf-node-top"><span class="mf-node-number">03</span><span class="mf-symbol" aria-hidden="true">±</span></span><strong data-flow-copy="distill">Distill selectively</strong><span class="mf-node-sub" data-flow-copy="distillSmall">Skill-conditioned teacher / ordinary student</span><span class="mf-teacher-student"><span>π(h + sₜ)</span><b>⇢</b><span>π(h)</span></span><span class="mf-mini-coefficient">mₜ · c tanh(αΔ / c)</span></button>
+              <div class="mf-snapshot"><span class="mf-snapshot-symbol" aria-hidden="true">π</span><span data-flow-copy="shared">ONE SNAPSHOT</span><p data-flow-copy="sharedBody">Actor, analyzer and teacher start from the same policy snapshot.</p><small data-flow-copy="sharedFoot">The student changes during optimization.</small></div>
+              <button class="mf-node mf-reward" type="button" data-flow-stage="3" aria-pressed="false"><span class="mf-node-top"><span class="mf-node-number">04</span><span class="mf-symbol" aria-hidden="true">✓ ↗</span></span><strong data-flow-copy="reward">Reward efficiency</strong><span class="mf-node-sub" data-flow-copy="rewardSmall">Compare successes in the same group</span><span class="mf-length-bars" aria-hidden="true"><i></i><i></i><i></i></span></button>
+              <button class="mf-node mf-update" type="button" data-flow-stage="4" aria-pressed="false"><span class="mf-node-top"><span class="mf-node-number">05</span><span class="mf-symbol" aria-hidden="true">⟳</span></span><strong data-flow-copy="update">Update the policy</strong><span class="mf-node-sub" data-flow-copy="updateSmall">GRPO + selective OPSD</span><span class="mf-update-formula">π<sub>θ</sub> → π<sub>θ′</sub></span></button>
+              <p class="mf-return-label" data-flow-copy="return">Updated actor + analyzer → next iteration</p>
+            </div>
+            <aside class="mf-detail" aria-live="off" aria-atomic="true">
+              <p class="mf-detail-eyebrow"><span class="mf-detail-category">EXPERIENCE</span><span class="mf-detail-index">01 / 05</span></p><h4 class="mf-detail-title">Let the policy act.</h4><p class="mf-detail-body">Collect an on-policy group for the same task. Keep both successful and failed trajectories: an outcome alone does not tell us which decisions were correct.</p>
+              <div class="mf-detail-visual" data-detail="0"><div class="mf-outcome-comparison"><span>✓ <span data-flow-copy="success">Success</span></span><span>× <span data-flow-copy="failure">Failure</span></span></div><p class="mf-visual-formula">{τ₁, τ₂, …, τₙ} ∼ π<sub>θ̄</sub></p><p data-flow-copy="sameToken" hidden>Both score the same sampled token.</p></div>
+              <div class="mf-detail-visual" data-detail="1" hidden><strong data-flow-copy="maskTitle">Selection controls the signal.</strong><div class="mf-mask-row"><span>m₁</span><i>0</i><i class="mf-mask-one">1</i><i>0</i><i>0</i><i>0</i><i>0</i></div><div class="mf-mask-row"><span>m₂</span><i>0</i><i>0</i><i>0</i><i class="mf-mask-one">1</i><i>0</i><i>0</i></div><p data-flow-copy="maskBody">Only selected steps enter the auxiliary distillation loss. Ordinary RL still trains on retained response tokens.</p></div>
+              <div class="mf-detail-visual mf-coefficient" data-detail="2" hidden><div class="mf-context-pair"><span data-flow-copy="teacher">Teacher: history + skill</span><span data-flow-copy="student">Student: ordinary history</span></div><p data-flow-copy="sameToken">Both score the same sampled token.</p><svg class="mf-curve" viewBox="0 0 260 160" role="img" aria-label="Bounded signed coefficient" data-flow-label="curveAlt"><path class="mf-axis" d="M20 80H242M130 15V145"/><path class="mf-bound" d="M20 30H242M20 130H242"/><text x="7" y="34">1</text><text x="3" y="134">−1</text><text x="243" y="95">Δ</text><text x="134" y="13">mÂ</text><path class="mf-curve-line"/><path class="mf-curve-guide"/><circle class="mf-curve-point" r="5"/></svg><label class="mf-gap-label" for="mf-gap"><span data-flow-copy="gap">Teacher–student log-probability gap Δ</span><output class="mf-gap-value" for="mf-gap">+1.50</output></label><input id="mf-gap" class="mf-gap" type="range" min="-4" max="4" step="0.05" value="1.5"><button class="mf-mask-toggle" type="button" aria-pressed="true" aria-label="Toggle whether this example step is selected" data-flow-label="selectToggle"><span class="mf-toggle-dot"></span><span class="mf-mask-toggle-text">Selected · m = 1</span></button><div class="mf-signal-result"><span data-flow-copy="coefficient">Distillation coefficient</span><output class="mf-signal-value" for="mf-gap">+0.905</output></div><p class="mf-signal-explanation">Positive gap → reinforce this token</p><small data-flow-copy="curveNote">Equation 8 · interactive example with α = c = 1.</small></div>
+              <div class="mf-detail-visual" data-detail="3" hidden><div class="mf-reward-example" data-length="8" data-success="true"><span>✓ 8 <span data-flow-copy="steps">interactions</span></span><i style="--length:67%"></i><b>b = 0.60</b></div><div class="mf-reward-example" data-length="12" data-success="true"><span>✓ 12 <span data-flow-copy="steps">interactions</span></span><i style="--length:100%"></i><b>b = 0.40</b></div><div class="mf-reward-example mf-failed-example" data-length="5" data-success="false"><span>× 5 <span data-flow-copy="steps">interactions</span></span><i style="--length:42%"></i><b>b = 0.00</b></div><p data-flow-copy="rewardNote">Example: two successes, τlen = 1. Failed trajectories get no efficiency bonus.</p></div>
+              <div class="mf-detail-visual" data-detail="4" hidden><p class="mf-loss-formula">L<sub>total</sub> = L<sub>GRPO</sub> + λL<sub>OPSD</sub></p><div class="mf-inference"><span data-flow-copy="inference">AT INFERENCE</span><p data-flow-copy="ordinary">Ordinary inputs. No hindsight skills. No analyzer calls.</p></div></div>
+              <p class="mf-takeaway">Success ≠ every step is right.</p>
+            </aside>
+          </div>
+          <div class="mf-controls" hidden><button type="button" class="mf-play"><span class="mf-play-icon" aria-hidden="true">▶</span><span class="mf-play-text" data-flow-copy="play">Play the flow</span></button><div class="mf-stage-progress" role="group" aria-label="Choose a flow stage" data-flow-label="hint"><button type="button" data-flow-stage="0" aria-pressed="true"><span>01</span><i></i></button><button type="button" data-flow-stage="1" aria-pressed="false"><span>02</span><i></i></button><button type="button" data-flow-stage="2" aria-pressed="false"><span>03</span><i></i></button><button type="button" data-flow-stage="3" aria-pressed="false"><span>04</span><i></i></button><button type="button" data-flow-stage="4" aria-pressed="false"><span>05</span><i></i></button></div><div class="mf-skip"><button type="button" class="mf-prev" aria-label="Previous stage" data-flow-label="previous">←</button><button type="button" class="mf-next" aria-label="Next stage" data-flow-label="next">→</button></div></div>
+          <p class="mf-note" data-flow-copy="illustrative">Conceptual illustration · step selections and lengths are examples, not annotations of the replay episode.</p>
+        </div>
+        <details class="mf-original"><summary><span data-flow-copy="figure">Full method diagram from the paper</span><span aria-hidden="true">＋</span></summary>
+        <figure class="paper-figure">
+          <button class="figure-open" type="button" data-figure="method" aria-haspopup="dialog" aria-describedby="caption-method"><img src="./assets/figures/method.png" width="2320" height="1094" loading="lazy" decoding="async" data-i18n-alt="alt.method" alt="SCOPE method diagram."><span class="zoom-label"><span aria-hidden="true">⤢</span> <span data-i18n="figure.zoom">View larger</span></span></button>
+          <figcaption id="caption-method" data-i18n="fig.method">Figure 2 · SCOPE: supervised analyzer initialization, self-bootstrapped critical-step analysis, selective bounded signed OPSD, and efficiency-aware GRPO.</figcaption>
+        </figure>
+        </details>
+        <ol class="method-steps">
+          <li><span class="step-number">01</span><h3 data-i18n="method.oneTitle">Initialize the analyzer</h3><p data-i18n="method.oneBody">A lightweight supervised warm-up teaches the policy to locate errors and write corrective skills. External annotation is confined to this offline stage.</p></li>
+          <li><span class="step-number">02</span><h3 data-i18n="method.twoTitle">Locate critical errors</h3><p data-i18n="method.twoBody">During online RL, the policy analyzes both successful and failed rollouts, assigning each selected error step its own relevant hindsight skill.</p></li>
+          <li><span class="step-number">03</span><h3 data-i18n="method.threeTitle">Bound the correction</h3><p data-i18n="method.threeBody">A bounded signed teacher–student coefficient preserves reinforcement and suppression while limiting extreme auxiliary update weights.</p></li>
+          <li><span class="step-number">04</span><h3 data-i18n="method.fourTitle">Reward efficient success</h3><p data-i18n="method.fourBody">A success-relative pairwise length reward favors shorter successful trajectories within the same task group, without a fixed length target.</p></li>
+        </ol>
+        <aside class="method-takeaway"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg><div><strong data-i18n="method.takeaway">Training-time hindsight. Ordinary inference.</strong><p data-i18n="method.takeawayBody">The learned policy completes tasks without skill conditioning or analyzer calls at evaluation.</p></div></aside>
+      </div>
+    </section>
+
+    <section id="replay" class="section container" aria-labelledby="replay-title">
+      <div class="section-heading">
+        <p class="section-label"><span>03</span><span data-replay-copy="label">Inside the trajectory</span></p>
+        <h2 id="replay-title" data-i18n="replay.title">Real tasks. Every action, in view.</h2>
+        <p class="section-description" data-i18n="replay.description">Follow recorded agents through an embodied room and an online store. Explore how each action changes the environment.</p>
+      </div>
+      <div class="replay-tabs" role="tablist" aria-label="Replay environment" data-i18n-aria="replay.environments"><button type="button" id="tab-alfworld" role="tab" data-replay-tab="alfworld" aria-controls="replay-alfworld" aria-selected="true">ALFWorld <span data-i18n="replay.embodied">Embodied task</span></button><button type="button" id="tab-webshop" role="tab" data-replay-tab="webshop" aria-controls="replay-webshop" aria-selected="false" tabindex="-1">WebShop <span data-i18n="replay.shopping">Shopping task</span></button></div>
+      <div id="replay-alfworld" role="tabpanel" aria-labelledby="tab-alfworld">
+      <div class="alf-shell" tabindex="0" aria-label="ALFWorld trajectory replay">
+        <div class="alf-taskbar"><div><span class="alf-task-label" data-replay-copy="task">Task</span><strong class="alf-task-goal">Put a newspaper on the sofa.</strong><span class="alf-goal-original">put a newspaper in sofa</span></div><label class="alf-episode-label"><span data-replay-copy="episode">Recorded trajectory</span><select class="alf-episode"><option>Newspaper → sofa</option></select><span class="alf-outcome" data-outcome="success">Successful trajectory</span></label></div>
+        <div class="alf-grid">
+          <div class="alf-stage">
+            <div class="alf-poster" aria-hidden="true"></div>
+            <div class="alf-canvas-host"></div>
+            <div class="alf-stage-top"><span class="alf-reconstruction" data-replay-copy="reconstruction">3D reconstruction from a text trajectory</span><button type="button" class="alf-fullscreen" data-replay-copy="fullscreen">Fullscreen</button></div>
+            <span class="alf-reticle" aria-hidden="true"></span>
+            <div class="alf-load-overlay"><span class="alf-viewer-wordmark">ALF<span>WORLD</span></span><button type="button" class="alf-load-button" data-replay-copy="enter">Enter the 3D replay</button><progress class="alf-load-progress" max="100" value="0" aria-label="3D loading progress" hidden></progress><p class="alf-load-status" aria-live="polite" data-replay-copy="source">4 successful trajectories · 2 failed trajectories</p></div>
+            <div class="alf-stage-bottom"><div class="alf-view-state" aria-live="polite">Initial state</div><strong class="alf-current-action">Room overview</strong><div class="alf-view-footer"><span class="alf-held"><span data-replay-copy="held">Holding</span>: <span class="alf-held-value">Nothing</span></span><span class="alf-look-hint" data-replay-copy="look">Pause, then drag to look around</span></div></div>
+          </div>
+          <aside class="alf-trajectory" aria-label="Agent trajectory">
+            <div class="alf-trajectory-head"><h3 data-replay-copy="actions">Agent trajectory</h3><span class="alf-step-counter">0 / 8</span></div>
+            <button type="button" class="alf-expand" aria-expanded="false" aria-controls="alf-action-list" data-replay-copy="expand">Show all actions</button>
+            <ol class="alf-actions" id="alf-action-list">
+              <li><code>go to dresser 1</code></li><li><code>go to sidetable 1</code></li><li><code>go to cabinet 1</code></li><li><code>go to sidetable 2</code></li><li><code>go to sidetable 3</code></li><li><code>take newspaper 1 from sidetable 3</code></li><li><code>go to sofa 1</code></li><li><code>move newspaper 1 to sofa 1</code></li>
+            </ol>
+            <div class="alf-step-detail"><p class="alf-caption-current">Initial state</p><details class="alf-before"><summary data-replay-copy="before">Before the action</summary><pre class="alf-before-text">You are in the middle of a room.</pre></details><h4 data-replay-copy="after">Environment feedback</h4><p class="alf-after-text" aria-live="polite">Start at the room overview. Select an action or press Play.</p><span class="alf-evidence-tag" data-replay-copy="inferred" hidden>Reconstructed final state</span><details class="alf-model-output" hidden><summary data-replay-copy="output">Recorded model output</summary><pre class="alf-model-text"></pre></details></div>
+          </aside>
+        </div>
+        <div class="alf-controls"><div class="alf-transport"><button type="button" class="alf-previous" data-replay-label="previous" aria-label="Previous step" disabled>←</button><button type="button" class="alf-play" disabled data-replay-copy="play">Play</button><button type="button" class="alf-next" data-replay-label="next" aria-label="Next step">→</button></div><label class="alf-range-label"><span data-replay-copy="seek">Replay step</span><input class="alf-step-range" type="range" min="0" max="8" step="1" value="0" data-replay-label="seek" aria-label="Replay step"></label><label class="alf-speed-label"><span data-replay-copy="speed">Speed</span><select class="alf-speed" data-replay-label="speed" aria-label="Speed"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option></select></label></div>
+        <p class="alf-log-result" data-replay-copy="result" hidden>Successful trajectory · Reward 10.0</p>
+      </div>
+      <p class="alf-evidence" data-replay-copy="evidence">Actions and observations are from the recorded episode. Room geometry, furniture appearance, and camera paths are reconstructed.</p>
+      <noscript><p>Enable JavaScript to load the first-person 3D replay. 上方列表保留原始八步动作；第一人称回放需启用 JavaScript。</p></noscript>
+      </div>
+      <div id="replay-webshop" role="tabpanel" aria-labelledby="tab-webshop" hidden>
+        <div class="ws-shell" tabindex="0" aria-label="WebShop trajectory replay">
+          <div class="ws-taskbar"><div class="ws-task-copy"><span class="ws-eyebrow" data-ws-copy="task">Shopping task</span><p class="ws-task">Find me quick release, hands free iphone accessories for wireless charging with color: freemount, and style: dash, and price lower than 70.00 dollars</p></div><label class="ws-episode-label"><span data-ws-copy="episode">Recorded episode</span><select class="ws-episode"><option>Car mount · dash / freemount</option></select><span class="ws-meta" data-outcome="success">Successful trajectory</span></label></div>
+          <div class="ws-grid">
+            <div class="ws-stage">
+              <div class="ws-browser"><div class="ws-chrome"><span class="ws-window-dots" aria-hidden="true">● ● ●</span><span class="ws-address">WebShop / recorded environment</span><button class="ws-fullscreen" type="button" data-ws-copy="fullscreen">Fullscreen</button></div>
+                <div class="ws-viewport" tabindex="0" aria-label="Reconstructed storefront"><div class="ws-page"><p data-ws-copy="loading">Loading recorded trajectories…</p></div></div>
+                <div class="ws-cursor" aria-hidden="true" hidden><svg width="23" height="28" viewBox="0 0 23 28"><path d="M2 2v21l6-6 5 9 4-2-5-9 9-1z" fill="#53366e" stroke="white" stroke-width="2" stroke-linejoin="round"/></svg><span class="ws-ripple"></span></div>
+              </div>
+              <div class="ws-stage-footer"><span class="ws-live-phase" aria-live="polite" data-ws-copy="initial">Initial state</span><span class="ws-stage-count">00 / 05</span></div>
+              <p class="ws-evidence" data-ws-copy="evidence">Reconstructed from a text trajectory · Product illustrations are schematic</p>
+            </div>
+            <aside class="ws-trajectory" aria-label="WebShop agent trajectory"><div class="ws-trajectory-head"><h3 data-ws-copy="actions">Agent trajectory</h3><span class="ws-step-count">0 / 5</span></div><button type="button" class="ws-initial" data-ws-copy="initial">Initial state</button><ol class="ws-actions"><li><code>search[quick release wireless charging dash style freemount accessory under $70]</code></li><li><code>click[b08qrhvs6n]</code></li><li><code>click[dash]</code></li><li><code>click[freemount]</code></li><li><code>click[buy now]</code></li></ol><div class="ws-step-detail"><p class="ws-step-caption"></p><details><summary data-ws-copy="before">Before the action</summary><pre class="ws-before">'Search'</pre></details><h4 data-ws-copy="after">Environment feedback</h4><p class="ws-feedback" aria-live="polite" data-ws-copy="startFeedback">Start from the search page. Press Play or select a step.</p><details class="ws-observation-detail"><summary>Observation</summary><pre class="ws-after"></pre></details><details class="ws-model-detail"><summary data-ws-copy="output">Recorded model output</summary><p class="ws-model-caution" data-ws-copy="modelCaution">Original model text; statements here are not verified product facts.</p><pre class="ws-output"></pre></details></div></aside>
+          </div>
+          <div class="ws-controls"><div class="ws-transport"><button class="ws-previous" type="button" data-ws-label="previous" aria-label="Previous step" disabled>←</button><button class="ws-play" type="button" data-ws-copy="play" disabled>Play</button><button class="ws-next" type="button" data-ws-label="next" aria-label="Next step" disabled>→</button></div><label class="ws-range-label"><span data-ws-copy="seek">Replay step</span><input class="ws-range" type="range" min="0" max="5" value="0" aria-label="Replay step" data-ws-label="seek" disabled></label><label class="ws-speed-label"><span data-ws-copy="speed">Speed</span><select class="ws-speed" data-ws-label="speed" aria-label="Speed"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option></select></label></div>
+          <div class="ws-load-error" role="status" hidden><p data-ws-copy="loadError">Replay data could not load. The recorded purchase actions remain available below.</p><button type="button" class="ws-retry" data-ws-copy="retry">Retry loading</button></div>
+        </div>
+        <noscript><p>This replay requires JavaScript. The five recorded purchase actions remain listed above. 此回放需启用 JavaScript，上方保留原始五步动作。</p></noscript>
+      </div>
+    </section>
+
+    <section id="results" class="section container" aria-labelledby="results-title">
+      <div class="section-heading">
+        <p class="section-label"><span>04</span><span data-i18n="results.label">The evidence</span></p>
+        <h2 id="results-title" data-i18n="results.title">Stronger completion across three backbones.</h2>
+        <p class="section-description" data-i18n="results.description">SCOPE achieves the highest WebShop success and the highest or tied-highest ALFWorld success among the evaluated methods for every backbone.</p>
+      </div>
+      <div class="result-panel">
+        <div class="results-toolbar"><span class="results-table-id" data-i18n="results.tableId">TABLE 01 / MAIN RESULTS</span>
+        <div class="model-picker" role="group" data-i18n-aria="results.models" aria-label="Choose a model backbone">
+          <button type="button" data-model="qwen25-3b" aria-pressed="true">Qwen2.5-3B</button>
+          <button type="button" data-model="qwen25-7b" aria-pressed="false">Qwen2.5-7B</button>
+          <button type="button" data-model="qwen3-17b" aria-pressed="false">Qwen3-1.7B</button>
+        </div>
+        </div>
+        <div class="results-highlights" aria-live="polite" aria-atomic="true">
+          <article class="benchmark-spotlight"><div class="benchmark-spotlight-head"><h3><span class="benchmark-dot" aria-hidden="true"></span>ALFWorld</h3><span class="spotlight-method">SCOPE</span></div><p class="spotlight-label" data-i18n="results.alfOverall">Overall task success</p><div class="spotlight-bottom"><p class="spotlight-score"><strong id="selected-alf">97.7</strong><span>%</span></p><p class="spotlight-gain"><strong id="gain-alf">+5.9 <span data-i18n="results.pp">pp</span></strong><span data-i18n="results.vsSeed">vs. SEED</span></p></div></article>
+          <article class="benchmark-spotlight benchmark-spotlight-web"><div class="benchmark-spotlight-head"><h3><span class="benchmark-dot" aria-hidden="true"></span>WebShop</h3><span class="spotlight-method">SCOPE</span></div><p class="spotlight-label" data-i18n="results.webOverall">Exact task success</p><div class="spotlight-bottom"><p class="spotlight-score"><strong id="selected-web">85.2</strong><span>%</span></p><p class="spotlight-gain"><strong id="gain-web">+6.3 <span data-i18n="results.pp">pp</span></strong><span data-i18n="results.vsSeed">vs. SEED</span></p></div></article>
+        </div>
+        <div class="result-table-meta"><p class="results-comparison-label" data-i18n="results.comparison">Full comparison · 9 methods</p><p class="table-scroll-hint"><span aria-hidden="true">↔</span> <span data-i18n="results.scroll">Scroll horizontally to see all metrics</span></p><p class="table-legend"><span class="legend-best" data-i18n="results.best">Best</span><span class="legend-second" data-i18n="results.second">Second best</span></p></div>
+        <div class="table-container" role="region" tabindex="0" data-i18n-aria="results.scrollLabel" aria-label="Full benchmark results; scroll horizontally to see all columns">
+          <table id="results-table" aria-describedby="results-note">
+            <caption><span data-i18n="results.caption">Table 1 · Full ALFWorld and WebShop results from the paper.</span> <span id="model-caption">Qwen2.5-3B-Instruct</span></caption>
+            <colgroup><col class="method-col"><col class="guidance-col"><col span="9"></colgroup>
+            <thead>
+              <tr><th class="method-heading" scope="col" rowspan="2" data-i18n="results.method">Method</th><th class="type-heading" scope="col" rowspan="2" data-i18n="results.type">Guidance type</th><th class="benchmark-header" scope="colgroup" colspan="7"><span data-i18n="results.alf">ALFWorld</span><small data-i18n="results.success">Success (%) ↑</small></th><th class="benchmark-header webshop-group" scope="colgroup" colspan="2"><span data-i18n="results.web">WebShop</span><small data-i18n="results.units">All values (%) ↑</small></th></tr>
+              <tr><th scope="col">Pick</th><th scope="col">Look</th><th scope="col">Clean</th><th scope="col">Heat</th><th scope="col">Cool</th><th scope="col">Pick2</th><th scope="col" data-i18n="results.avg">Overall</th><th class="webshop-group" scope="col" data-i18n="results.score">Score</th><th scope="col" data-i18n="results.succ">Success</th></tr>
+            </thead>
+            <tbody id="results-body">
+              <tr><th scope="row"><span class="method-name">Vanilla</span></th><td class="guidance-type">None</td><td data-metric="pick">44.4</td><td data-metric="look">11.1</td><td data-metric="clean">6.2</td><td data-metric="heat">15.4</td><td data-metric="cool">28.6</td><td data-metric="pick2">12.5</td><td data-metric="avg">21.9</td><td data-metric="score">6.7</td><td data-metric="success">0.8</td></tr>
+              <tr><th scope="row"><span class="method-name">Skill-Prompt*</span></th><td class="guidance-type">Skill bank</td><td data-metric="pick">51.7</td><td data-metric="look">66.7</td><td data-metric="clean">48.4</td><td data-metric="heat">0.0</td><td data-metric="cool">4.3</td><td data-metric="pick2">10.0</td><td data-metric="avg">28.9</td><td data-metric="score">0.2</td><td data-metric="success">0.8</td></tr>
+              <tr><th scope="row"><span class="method-name">GRPO</span></th><td class="guidance-type">None</td><td data-metric="pick">91.2</td><td data-metric="look">62.5</td><td data-metric="clean" class="result-second"><span>96.2</span></td><td data-metric="heat">61.9</td><td data-metric="cool">65.0</td><td data-metric="pick2">47.4</td><td data-metric="avg">75.0</td><td data-metric="score">79.8</td><td data-metric="success">63.3</td></tr>
+              <tr><th scope="row"><span class="method-name">AgentOPSD</span></th><td class="guidance-type">Skill bank</td><td data-metric="pick" class="result-best"><strong>100.0</strong></td><td data-metric="look">68.8</td><td data-metric="clean">86.4</td><td data-metric="heat">66.7</td><td data-metric="cool" class="result-second"><span>84.6</span></td><td data-metric="pick2">73.7</td><td data-metric="avg">84.4</td><td data-metric="score" class="result-best"><strong>90.4</strong></td><td data-metric="success">69.5</td></tr>
+              <tr><th scope="row"><span class="method-name">SDAR</span></th><td class="guidance-type">Skill bank</td><td data-metric="pick" class="result-second"><span>97.1</span></td><td data-metric="look">62.5</td><td data-metric="clean" class="result-best"><strong>100.0</strong></td><td data-metric="heat">61.9</td><td data-metric="cool">75.0</td><td data-metric="pick2">84.2</td><td data-metric="avg">84.4</td><td data-metric="score">85.0</td><td data-metric="success">68.0</td></tr>
+              <tr><th scope="row"><span class="method-name">OPID</span></th><td class="guidance-type">Hybrid skills</td><td data-metric="pick">92.7</td><td data-metric="look" class="result-best"><strong>100.0</strong></td><td data-metric="clean">88.9</td><td data-metric="heat">70.0</td><td data-metric="cool">84.2</td><td data-metric="pick2">70.0</td><td data-metric="avg">84.3</td><td data-metric="score">85.0</td><td data-metric="success">74.2</td></tr>
+              <tr><th scope="row"><span class="method-name">GRSD</span></th><td class="guidance-type">Traj. skill</td><td data-metric="pick" class="result-best"><strong>100.0</strong></td><td data-metric="look" class="result-second"><span>81.3</span></td><td data-metric="clean">91.3</td><td data-metric="heat" class="result-second"><span>88.2</span></td><td data-metric="cool">70.8</td><td data-metric="pick2" class="result-second"><span>85.7</span></td><td data-metric="avg">86.7</td><td data-metric="score">86.9</td><td data-metric="success">76.5</td></tr>
+              <tr><th scope="row"><span class="method-name">SEED</span></th><td class="guidance-type">Traj. skill</td><td data-metric="pick" class="result-best"><strong>100.0</strong></td><td data-metric="look" class="result-best"><strong>100.0</strong></td><td data-metric="clean" class="result-best"><strong>100.0</strong></td><td data-metric="heat" class="result-best"><strong>100.0</strong></td><td data-metric="cool">70.6</td><td data-metric="pick2">80.0</td><td data-metric="avg" class="result-second"><span>91.8</span></td><td data-metric="score" class="result-second"><span>88.5</span></td><td data-metric="success" class="result-second"><span>78.9</span></td></tr>
+              <tr class="ours"><th scope="row"><span class="method-name">SCOPE <span class="ours-label" data-i18n="results.ours">Ours</span></span></th><td class="guidance-type">Step skills</td><td data-metric="pick" class="result-best"><strong>100.0</strong></td><td data-metric="look" class="result-best"><strong>100.0</strong></td><td data-metric="clean" class="result-best"><strong>100.0</strong></td><td data-metric="heat" class="result-best"><strong>100.0</strong></td><td data-metric="cool" class="result-best"><strong>85.7</strong></td><td data-metric="pick2" class="result-best"><strong>100.0</strong></td><td data-metric="avg" class="result-best"><strong>97.7</strong></td><td data-metric="score">87.9</td><td data-metric="success" class="result-best"><strong>85.2</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <details class="results-protocol"><summary><span data-i18n="results.protocol">Evaluation protocol & notes</span><span aria-hidden="true">＋</span></summary><p class="table-note" id="results-note" data-i18n="results.note">All values are percentages. ALFWorld: success on six task families and the overall episode success rate (Overall), evaluated on 128 seen validation episodes. WebShop: mean normalized task score (Score) and exact task success (Success) on 128 fixed tasks. Type describes auxiliary guidance; hybrid skills combine trajectory- and step-level skills. SCOPE metrics are logged at training step 150. * Skill-Prompt receives skills at evaluation. Best and second-best distinct values are highlighted within each backbone, including ties.</p></details>
+    </section>
+
+    <section id="analysis" class="section section-analysis" aria-labelledby="analysis-title">
+      <div class="container">
+        <div class="section-heading">
+          <p class="section-label"><span>05</span><span data-i18n="analysis.label">A closer look</span></p>
+          <h2 id="analysis-title" data-i18n="analysis.title">Beyond the main benchmark.</h2>
+          <p class="section-description" data-i18n="analysis.description">Unseen tasks, optimization diagnostics, and component ablations examine what the complete system learns and how it trains.</p>
+        </div>
+        <article class="generalization">
+          <div class="generalization-copy"><p class="analysis-tag" data-i18n="general.tag">01 / Generalization</p><h3 data-i18n="general.title">More unseen tasks solved. Fewer interactions.</h3><p data-i18n="general.body">On unseen ALFWorld tasks, success rises from 66.4% with GRPO to 89.6% with SCOPE. Average interactions fall from 18.86 to 10.06.</p>
+            <div class="general-metrics"><div><strong>89.6<span>%</span></strong><span data-i18n="general.success">unseen-task success</span></div><div><strong>+23.2</strong><span data-i18n="general.gain">pp over GRPO</span></div><div><strong>46.7<span>%</span></strong><span data-i18n="general.turns">fewer interactions</span></div></div>
+          </div>
+          <figure class="paper-figure"><button class="figure-open" type="button" data-figure="general" aria-haspopup="dialog" aria-describedby="caption-general"><img src="./assets/figures/scope-unseen-generalization.png" width="1400" height="976" loading="lazy" decoding="async" data-i18n-alt="alt.general" alt="Generalization on unseen ALFWorld tasks."><span class="zoom-label"><span aria-hidden="true">⤢</span> <span data-i18n="figure.zoom">View larger</span></span></button><figcaption id="caption-general" data-i18n="fig.general">Figure 7 · ALFWorld unseen-task generalization. Gains are percentage points; interaction reduction is relative, not a wall-clock speedup.</figcaption></figure>
+        </article>
+        <div class="analysis-pair">
+          <article><p class="analysis-tag" data-i18n="stability.tag">02 / Optimization</p><h3 data-i18n="stability.title">Keep extreme gaps in check.</h3><p data-i18n="stability.body">The paper records a sharp student log-probability drop during minibatch optimization. SCOPE bounds the signed distillation coefficient to limit gap-driven amplification.</p>
+            <figure class="paper-figure"><button class="figure-open" type="button" data-figure="stability" aria-haspopup="dialog" aria-describedby="caption-stability"><img src="./assets/figures/scope-opsd-stability.png" width="1100" height="568" loading="lazy" decoding="async" data-i18n-alt="alt.stability" alt="Teacher–student optimization diagnostics."><span class="zoom-label"><span aria-hidden="true">⤢</span> <span data-i18n="figure.zoom">View larger</span></span></button><figcaption id="caption-stability" data-i18n="fig.stability">Figure 3 · Optimization anomaly: current student scores versus cached teacher scores. Dashed lines mark outer update 26.</figcaption></figure>
+          </article>
+          <article><p class="analysis-tag" data-i18n="efficiency.tag">03 / Interaction efficiency</p><h3 data-i18n="efficiency.title">Encourage shorter successful behavior.</h3><p data-i18n="efficiency.body">Pairwise rewards compare interaction lengths among successes from the same task group. The plot reports mean response steps during ALFWorld training; lower is better.</p>
+            <figure class="paper-figure efficiency-figure"><button class="figure-open" type="button" data-figure="efficiency" aria-haspopup="dialog" aria-describedby="caption-efficiency"><img src="./assets/figures/scope-response-steps-compact.png" width="888" height="900" loading="lazy" decoding="async" data-i18n-alt="alt.efficiency" alt="Mean ALFWorld response steps during training."><span class="zoom-label"><span aria-hidden="true">⤢</span> <span data-i18n="figure.zoom">View larger</span></span></button><figcaption id="caption-efficiency" data-i18n="fig.efficiency">Figure 6 · Mean response steps on ALFWorld. The GRPO curve uses seed 0.</figcaption></figure>
+          </article>
+        </div>
+        <article class="ablation"><div class="ablation-heading"><p class="analysis-tag" data-i18n="ablation.tag">04 / Component ablations</p><h3 data-i18n="ablation.title">Each component has a role.</h3><p data-i18n="ablation.body">At training step 180, full SCOPE reaches 98.4% ALFWorld success. Removing supervised initialization yields 92.2%; removing the length reward yields 93.0%.</p></div>
+          <figure class="paper-figure"><button class="figure-open" type="button" data-figure="ablation" aria-haspopup="dialog" aria-describedby="caption-ablation"><img src="./assets/figures/scope-ablation-success-compact.png" width="2320" height="537" loading="lazy" decoding="async" data-i18n-alt="alt.ablation" alt="ALFWorld component ablations and parameter sweeps."><span class="zoom-label"><span aria-hidden="true">⤢</span> <span data-i18n="figure.zoom">View larger</span></span></button><figcaption id="caption-ablation" data-i18n="fig.ablation">Figure 4 · Qwen2.5-3B on ALFWorld: component ablations and parameter sweeps. Endpoint comparisons use step 180, separately from the step-150 main results.</figcaption></figure>
+        </article>
+        <details class="supplementary"><summary><span data-i18n="sensitivity.title">Supplementary analysis: parameter sensitivity</span><span class="details-plus" aria-hidden="true">+</span></summary><div class="supplementary-inner"><p data-i18n="sensitivity.body">The default setting is α = 2.5, c = 1, and τlen = 0.1. The paper varies one parameter at a time and reports task-family success at training step 180.</p><figure class="paper-figure sensitivity-figure"><button class="figure-open" type="button" data-figure="sensitivity" aria-haspopup="dialog" aria-describedby="caption-sensitivity"><img src="./assets/figures/scope-parameter-sensitivity-compact.png" width="797" height="900" loading="lazy" decoding="async" data-i18n-alt="alt.sensitivity" alt="ALFWorld parameter-sensitivity heatmap."><span class="zoom-label"><span aria-hidden="true">⤢</span> <span data-i18n="figure.zoom">View larger</span></span></button><figcaption id="caption-sensitivity" data-i18n="fig.sensitivity">Figure 5 · Parameter sensitivity on ALFWorld with Qwen2.5-3B, evaluated at step 180.</figcaption></figure></div></details>
+      </div>
+    </section>
+    <section class="closing container" aria-labelledby="closing-title"><span class="closing-mark" aria-hidden="true">✦</span><h2 id="closing-title" data-i18n="footer.title">A closer look at the critical steps.</h2><p data-i18n="footer.body">Read the full paper for the formulation, experiments, and implementation details.</p><a class="button button-primary paper-link" href="./SCOPE.pdf" target="_blank" rel="noopener"><span data-i18n="paper">Read the paper</span><span aria-hidden="true">↗</span></a></section>
+  </main>
+  <footer class="site-footer container"><a href="#" class="footer-brand">SCOPE<span>.</span></a><p data-i18n="footer.note">Original paper figures · Bilingual research project page</p><span class="preview-status"><span class="status-dot" aria-hidden="true"></span><span id="publication-status" data-i18n="footer.status">Anonymous preview</span></span></footer>
+
+  <dialog id="figure-dialog" aria-labelledby="dialog-caption">
+    <div class="dialog-toolbar"><span data-i18n="dialog.hint">Scroll to inspect · Esc to close</span><button type="button" class="dialog-close" data-i18n-aria="dialog.close" aria-label="Close image" autofocus>×</button></div>
+    <div class="dialog-scroll"><img id="dialog-image" alt=""><p id="dialog-caption"></p></div>
+  </dialog>
+  <noscript><p class="noscript-note">This page is readable without JavaScript. Enable JavaScript for Chinese translation, model switching, and larger figure views. 本页无需 JavaScript 即可阅读；语言切换、模型切换与大图查看需启用 JavaScript。</p></noscript>
+</body>
+</html>
