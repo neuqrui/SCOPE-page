@@ -1,48 +1,99 @@
-// Saved Qwen2.5-3B WebShop training rollouts (steps 152, 162, 170).
+// Saved ALFWorld success (Qwen3-1.7B, step 118) and WebShop failure/clean (Qwen2.5-3B, steps 152/170).
 // Actions, post-action observations, target_steps, error_reason, and skill match server records.
 // Step indices are zero-based; the final reward line is derived from episode_reward.
 export default {
   "success": {
     "source": {
-      "model": "Qwen2.5-3B",
-      "training_step": 162,
-      "trajectory_id": "ff45affd-a2af-477a-a643-82932da25457",
+      "model": "Qwen3-1.7B",
+      "training_step": 118,
+      "trajectory_id": "fe4ccadb-c3e2-4767-990d-ec09fb26d844",
       "split": "train",
-      "environment": "WebShop",
-      "run": "grpo_opsd_kl_qwen2.5_3b_coef0.01_sampled_kl_gatetanh_c1_step_skill_none_length_pairwise_from_sftv2-3epoch-glm2"
+      "environment": "ALFWorld",
+      "run": "grpo_opsd_kl_qwen3_1.7b_sft_coef0.01_sampled_kl_gatetanh_c1_step_skill_none_length_pairwise"
     },
-    "goal": "Find me machine wash men's dress shirts with cotton spandex, classic fit, short sleeve with color: estate blue, and size: large, and price lower than 50.00 dollars",
+    "goal": "put two pencil in shelf",
     "outcome": true,
     "reward": 10.0,
     "actions": [
-      "search[men's dress shirts cotton spandex classic fit short sleeve estate blue large size under $50]",
-      "click[b07hrfsnl4]",
-      "click[large]",
-      "click[estate blue]",
-      "click[buy now]"
+      "go to desk 1",
+      "take pencil 1 from desk 1",
+      "go to shelf 1",
+      "move pencil 1 to shelf 1",
+      "go to shelf 2",
+      "go to shelf 2",
+      "go to shelf 2",
+      "go to shelf 3",
+      "go to desk 1",
+      "go to shelf 4",
+      "take pen 2 from shelf 4",
+      "go to shelf 1",
+      "move pen 2 to shelf 1",
+      "go to dresser 1",
+      "take pencil 2 from dresser 1",
+      "go to shelf 4",
+      "move pencil 2 to shelf 4",
+      "go to shelf 1",
+      "take pencil 1 from shelf 1",
+      "move pencil 1 to shelf 4",
+      "move pencil 1 to shelf 4",
+      "go to shelf 4",
+      "move pencil 1 to shelf 4"
     ],
     "feedback": [
-      "'Back to Search' [SEP] 'Page 1 (Total results: 50)' [SEP] 'Next >' [SEP] 'B09QQP3356' [SEP] 'HAUKLIE Men's Sports Waffle Ribbed Polo Shirts Summer Short Sleeve Cotton Muscle Quarter-Zip Henley T-Shirt Tunics Tops' [SEP] '$10.99' [SEP] 'B07HRFSNL4' [SEP] 'Nautica Men's Solid Crew Neck Short-Sleeve Pocket T-Shirt' [SEP] '$16.05 to $40.98' [SEP] 'B09QGK5XHZ' [SEP] 'WENKOMG1 Men's Long Sleeve Undershirt with Mask Turtleneck Hooded T-Shirt Solid Color Workout Tops Zipper Side Slit Shirts Slim Fit Sweatshirt Spring/Summer Tee Shirts(Gray,)' [SEP] '$8.39' [SEP] 'B085WQKRRJ' [SEP] 'CLANMILUMS Men's Classic Comfort Soft Regular Fit Short Sleeve Henley T-Shirt Tee' [SEP] '$17.99 to $19.99' [SEP] 'B09R9YCM6R' [SEP] 'XXBR Summer T-shirts for Mens, Soldier Short Sleeve 3D Street Vintage Printed Shirt Slim Fit Muscle Casual Tee Tops' [SEP] '$8.98 to $11.99' [SEP] 'B09S3BN15C' [SEP] 'Mens Linen Shirt,Men's Striped Shirts Casual Short Sleeve Button Down Shirts Regular Fit Hawaiian Shirts Beach Tees Tops' [SEP] '$3.78 to $11.38' [SEP] 'B09NNMV9LN' [SEP] 'JSPOYOU Mens Short Sleeve Crewneck 3D Graphic Tunic Shirts Big & Tall Tie Dye Summer Top Basic Designed Classic Cotton Shirt' [SEP] '$3.99 to $10.99' [SEP] 'B09KLQLLT2' [SEP] 'Long Sleeve Superhero T Shirt Tank Top Mens Compression Shirt Men Workout Fitness Gym Shirt' [SEP] '$19.99' [SEP] 'B07JVVDJ6L' [SEP] 'Canadian Tuxedo T Shirt - Novelty Denim Tux T-Shirt' [SEP] '$19.99' [SEP] 'B07F2G93BJ' [SEP] 'Amazon Essentials Men's Slim-fit Long-Sleeve Solid Pocket Oxford Shirt' [SEP] '$18.5'",
-      "'Back to Search' [SEP] '< Prev' [SEP] 'size' [SEP] 'x-small' [SEP] 'small' [SEP] 'medium' [SEP] 'large' [SEP] 'large tall' [SEP] 'x-large' [SEP] 'x-large tall' [SEP] 'xx-large' [SEP] 'xx-large tall' [SEP] '3x-large tall' [SEP] '4x-large tall' [SEP] '5x-large tall' [SEP] '1x' [SEP] '2x' [SEP] '3x' [SEP] '4x' [SEP] '5x' [SEP] '6x' [SEP] 'color' [SEP] 'navy' [SEP] 'noon blue' [SEP] 'grey heather' [SEP] 'nautica red' [SEP] 'bright white' [SEP] 'true black' [SEP] 'pale coral' [SEP] 'cradle pink' [SEP] 'bright aqua' [SEP] 'mint spring' [SEP] 'monaco blue' [SEP] 'charcoal heather (dark)' [SEP] 'barolo' [SEP] 'tidal green' [SEP] 'charcoal heather (light)' [SEP] 'estate blue' [SEP] 'patina green' [SEP] 'black' [SEP] 'bright aqua blue' [SEP] 'bright cobalt' [SEP] 'coral sands' [SEP] 'deep anchor heather' [SEP] 'hawaiian ocean' [SEP] 'melon berry' [SEP] 'pine forest green' [SEP] 'shipwreck burgundy' [SEP] 'white' [SEP] 'zest' [SEP] 'deep atlantic' [SEP] 'delft' [SEP] 'pale coral red' [SEP] 'Nautica Men's Solid Crew Neck Short-Sleeve Pocket T-Shirt' [SEP] 'Price: $16.05 to $40.98' [SEP] 'Rating: N.A.' [SEP] 'Description' [SEP] 'Features' [SEP] 'Reviews' [SEP] 'Buy Now'",
-      "'Back to Search' [SEP] '< Prev' [SEP] 'size' [SEP] 'x-small' [SEP] 'small' [SEP] 'medium' [SEP] 'large' [SEP] 'large tall' [SEP] 'x-large' [SEP] 'x-large tall' [SEP] 'xx-large' [SEP] 'xx-large tall' [SEP] '3x-large tall' [SEP] '4x-large tall' [SEP] '5x-large tall' [SEP] '1x' [SEP] '2x' [SEP] '3x' [SEP] '4x' [SEP] '5x' [SEP] '6x' [SEP] 'color' [SEP] 'navy' [SEP] 'noon blue' [SEP] 'grey heather' [SEP] 'nautica red' [SEP] 'bright white' [SEP] 'true black' [SEP] 'pale coral' [SEP] 'cradle pink' [SEP] 'bright aqua' [SEP] 'mint spring' [SEP] 'monaco blue' [SEP] 'charcoal heather (dark)' [SEP] 'barolo' [SEP] 'tidal green' [SEP] 'charcoal heather (light)' [SEP] 'estate blue' [SEP] 'patina green' [SEP] 'black' [SEP] 'bright aqua blue' [SEP] 'bright cobalt' [SEP] 'coral sands' [SEP] 'deep anchor heather' [SEP] 'hawaiian ocean' [SEP] 'melon berry' [SEP] 'pine forest green' [SEP] 'shipwreck burgundy' [SEP] 'white' [SEP] 'zest' [SEP] 'deep atlantic' [SEP] 'delft' [SEP] 'pale coral red' [SEP] 'Nautica Men's Solid Crew Neck Short-Sleeve Pocket T-Shirt' [SEP] 'Price: $16.05 to $40.98' [SEP] 'Rating: N.A.' [SEP] 'Description' [SEP] 'Features' [SEP] 'Reviews' [SEP] 'Buy Now'",
-      "'Back to Search' [SEP] '< Prev' [SEP] 'size' [SEP] 'x-small' [SEP] 'small' [SEP] 'medium' [SEP] 'large' [SEP] 'large tall' [SEP] 'x-large' [SEP] 'x-large tall' [SEP] 'xx-large' [SEP] 'xx-large tall' [SEP] '3x-large tall' [SEP] '4x-large tall' [SEP] '5x-large tall' [SEP] '1x' [SEP] '2x' [SEP] '3x' [SEP] '4x' [SEP] '5x' [SEP] '6x' [SEP] 'color' [SEP] 'navy' [SEP] 'noon blue' [SEP] 'grey heather' [SEP] 'nautica red' [SEP] 'bright white' [SEP] 'true black' [SEP] 'pale coral' [SEP] 'cradle pink' [SEP] 'bright aqua' [SEP] 'mint spring' [SEP] 'monaco blue' [SEP] 'charcoal heather (dark)' [SEP] 'barolo' [SEP] 'tidal green' [SEP] 'charcoal heather (light)' [SEP] 'estate blue' [SEP] 'patina green' [SEP] 'black' [SEP] 'bright aqua blue' [SEP] 'bright cobalt' [SEP] 'coral sands' [SEP] 'deep anchor heather' [SEP] 'hawaiian ocean' [SEP] 'melon berry' [SEP] 'pine forest green' [SEP] 'shipwreck burgundy' [SEP] 'white' [SEP] 'zest' [SEP] 'deep atlantic' [SEP] 'delft' [SEP] 'pale coral red' [SEP] 'Nautica Men's Solid Crew Neck Short-Sleeve Pocket T-Shirt' [SEP] 'Price: $16.05 to $40.98' [SEP] 'Rating: N.A.' [SEP] 'Description' [SEP] 'Features' [SEP] 'Reviews' [SEP] 'Buy Now'",
+      "You arrive at desk 1. On the desk 1, you see a alarmclock 3, a alarmclock 2, a alarmclock 1, a bowl 1, a creditcard 2, a mug 1, and a pencil 1.",
+      "You pick up the pencil 1 from the desk 1.",
+      "You arrive at shelf 1. On the shelf 1, you see nothing.",
+      "You move the pencil 1 to the shelf 1.",
+      "Nothing happens.",
+      "Nothing happens.",
+      "Nothing happens.",
+      "You arrive at shelf 3. On the shelf 3, you see nothing.",
+      "You arrive at desk 1. On the desk 1, you see a alarmclock 3, a alarmclock 2, a alarmclock 1, a bowl 1, a creditcard 2, and a mug 1.",
+      "You arrive at shelf 4. On the shelf 4, you see a pen 2.",
+      "You pick up the pen 2 from the shelf 4.",
+      "You arrive at shelf 1. On the shelf 1, you see a pencil 1.",
+      "You move the pen 2 to the shelf 1.",
+      "You arrive at dresser 1. On the dresser 1, you see a cd 2, a cd 1, a desklamp 1, a pencil 3, and a pencil 2.",
+      "You pick up the pencil 2 from the dresser 1.",
+      "You arrive at shelf 4. On the shelf 4, you see nothing.",
+      "You move the pencil 2 to the shelf 4.",
+      "You arrive at shelf 1. On the shelf 1, you see a pen 2, and a pencil 1.",
+      "You pick up the pencil 1 from the shelf 1.",
+      "Nothing happens.",
+      "Nothing happens.",
+      "You arrive at shelf 4. On the shelf 4, you see a pencil 2.",
       "Rollout ended · episode reward 10.0"
     ],
     "skills": [
       {
         "target_steps": [
-          1
+          5,
+          6,
+          7
         ],
-        "error_reason": "Step 1 clicks on a product that is explicitly a short-sleeve t-shirt, not a dress shirt, and the search results contain no items matching the required material (cotton spandex) or fit (classic fit) criteria, so the search query was too broad and the first result was not a reasonable candidate.",
-        "skill": "Before clicking into a product from search results, verify that the product title and visible attributes match the required item type and key material specifications; if no result matches, refine the search query rather than clicking the first or most popular item.",
+        "error_reason": "At steps 5-7 the agent repeatedly tried to navigate to shelf 2 while already at shelf 2 and at the same location, wasting steps instead of navigating to an unvisited receptacle.",
+        "skill": "When navigation attempts return 'Nothing happens,' stop repeating that same destination and immediately navigate to the next unvisited receptacle you have not yet visited.",
         "evidence_steps": []
       },
       {
         "target_steps": [
-          4
+          10,
+          11,
+          12,
+          13
         ],
-        "error_reason": "Step 4 clicks 'Buy Now' without confirming that the product is actually a dress shirt with cotton spandex fabric and classic fit, as the title still shows 'Crew Neck Short-Sleeve Pocket T-Shirt' and the product description would need to verify the required attributes.",
-        "skill": "Before clicking buy, verify that all required attributes (item type, fabric material, fit, color, size) are confirmed in the product title, description, or features; do not purchase based on the price alone when the product does not match the required specifications.",
+        "error_reason": "At steps 10-13 the agent picked up pen 2 from shelf 4 and then moved it to shelf 1, which was irrelevant to the task of placing pencils, wasting steps on a different object.",
+        "skill": "When searching for target objects to place, do not pick up and move irrelevant objects like pens or cups, and prioritize finding and placing only the required target items.",
+        "evidence_steps": []
+      },
+      {
+        "target_steps": [
+          20,
+          21,
+          22
+        ],
+        "error_reason": "At steps 20-22 the agent repeatedly attempted to move an item to a location even though the agent was not at that location, resulting in no effect.",
+        "skill": "Before attempting to put or move an object into a receptacle, first navigate to that receptacle with a go action; if navigating wastes steps, prioritize visiting unvisited receptacles first.",
         "evidence_steps": []
       }
     ]

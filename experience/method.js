@@ -59,14 +59,16 @@ function player(panel, duration, render, button, labels) {
 // Recorded training rollouts. The English observations and Analyzer fields come from the saved logs.
 const scenarioTranslations = {
   success: {
-    goal: '寻找可机洗、棉氨纶材质、经典版型、短袖、estate blue 色、L 码、低于 50 美元的男士正装衬衫。',
+    goal: '把两支铅笔放到架子上。',
     reasons: [
-      '第 1 步点击的是短袖 T 恤，并非任务要求的正装衬衫；搜索结果中也没有证实其棉氨纶材质和经典版型。',
-      '第 4 步购买前仍未确认商品是正装衬衫及其材质和版型；商品标题显示它是圆领短袖口袋 T 恤。',
+      '第 5、6 步反复尝试前往 shelf 2，反馈均为“没有发生变化”；第 7 步才转向其他架子。',
+      '第 10—12 步拿起并搬运的是钢笔，不是任务要求的铅笔，浪费了交互。',
+      '第 20 步尚未到 shelf 4 就尝试放置铅笔，没有发生变化；第 21 步前往 shelf 4 后，第 22 步才完成放置。',
     ],
     skills: [
-      '点击搜索结果前，先核对标题和可见属性是否符合商品类别及关键材质；若没有匹配结果，应优化搜索词。',
-      '购买前核对标题、描述或商品特性中的类别、材质、版型、颜色和尺码；不能仅凭价格购买不符合要求的商品。',
+      '导航返回“没有发生变化”时，不要反复尝试同一目的地；转而检查尚未访问的容器。',
+      '寻找目标物品时，不要拿取和搬运钢笔等无关物品，应优先寻找并放置任务要求的铅笔。',
+      '放置物品前，先前往目标容器；当前位置不对时直接尝试放置不会生效。',
     ],
   },
   failure: {
@@ -99,14 +101,25 @@ function summarizeRecordedObservation(value, lang) {
   }
   return `${zh?'页面摘录':'Page excerpt'} · ${parts.slice(0,3).join(' · ')}`;
 }
+function translateAlfWorldObservation(value) {
+  let match;
+  if((match=value.match(/^Rollout ended · episode reward (.+)$/)))return `轨迹结束 · 回报 ${match[1]}`;
+  if(value==='Nothing happens.')return '没有发生变化。';
+  if((match=value.match(/^You arrive at (.+?)\. On the .+?, you see (.+)\.$/)))return match[2]==='nothing'?`你来到 ${match[1]}，这里没有物品。`:`你来到 ${match[1]}，看到：${match[2].replace(/\b(?:a|an) (?=[a-z])/g,'').replace(/, and /g,'、').replace(/, /g,'、')}。`;
+  if((match=value.match(/^You arrive at (.+?)\. The .+? is (closed|open)\.$/)))return `你来到 ${match[1]}，它是${match[2]==='closed'?'关闭':'打开'}的。`;
+  if((match=value.match(/^You pick up the (.+?) from the (.+?)\.$/)))return `你从 ${match[2]} 拿起 ${match[1]}。`;
+  if((match=value.match(/^You move the (.+?) to the (.+?)\.$/)))return `你把 ${match[1]} 放到 ${match[2]}。`;
+  return value;
+}
 const scenarios = Object.fromEntries(Object.entries(recordedAnalyzerExamples).map(([name, record]) => {
   const translated = scenarioTranslations[name];
+  const alfWorld=record.source.environment==='ALFWorld';
   return [name, {
     source: record.source,
     goal: [record.goal, translated.goal],
     outcome: record.outcome,
     actions: record.actions,
-    feedback: record.feedback.map(value => [summarizeRecordedObservation(value,'en'), summarizeRecordedObservation(value,'zh')]),
+    feedback: record.feedback.map(value => alfWorld?[value,translateAlfWorldObservation(value)]:[summarizeRecordedObservation(value,'en'),summarizeRecordedObservation(value,'zh')]),
     skills: record.skills.map((skill, index) => ({
       steps: skill.target_steps,
       reason: [skill.error_reason, translated.reasons[index]],
@@ -119,10 +132,10 @@ const getScenario=()=>scenarios[scenario];
 function buildTrajectory() {
   const data=getScenario(); generatedKey=''; selectedStep=-1; lastScanned=-1;
   $('.analyzer-goal').textContent=data.goal[language==='zh'?1:0];
-  $('.trajectory-source').textContent=local(`WebShop · Qwen2.5-3B · train step ${data.source.training_step} · #${data.source.trajectory_id.slice(0,8)}`,`WebShop · Qwen2.5-3B · 训练第 ${data.source.training_step} 步 · #${data.source.trajectory_id.slice(0,8)}`);
+  $('.trajectory-source').textContent=local(`${data.source.environment} · ${data.source.model} · train step ${data.source.training_step} · #${data.source.trajectory_id.slice(0,8)}`,`${data.source.environment} · ${data.source.model} · 训练第 ${data.source.training_step} 步 · #${data.source.trajectory_id.slice(0,8)}`);
   $('.trajectory-outcome').textContent=data.outcome?local('SUCCESS ✓','成功 ✓'):local('FAILURE ×','失败 ×');
   $('.trajectory-outcome').dataset.success=String(data.outcome);
-  $('.reference-copy').textContent=local('Saved Analyzer output · step indices start at 0, as in the training log.','训练记录中的 Analyzer 原始输出 · 步骤编号从 0 开始。');
+  $('.reference-copy').textContent=local('Recorded Analyzer result · step indices start at 0, as in the training log.','真实训练记录中的 Analyzer 结果 · 步骤编号从 0 开始。');
   $('.trajectory-list').replaceChildren();$('.trajectory-list').scrollTop=0;$('.mask-cells').replaceChildren();
   data.actions.forEach((action,i)=>{
     const button=document.createElement('button');button.type='button';button.className='trajectory-step';button.dataset.step=i;
@@ -229,7 +242,7 @@ function updateAnalyzerLinks(skills) {
 }
 window.addEventListener('resize',()=>updateAnalyzerLinks(getScenario().skills),{passive:true});
 $('.trajectory-list').addEventListener('scroll',()=>updateAnalyzerLinks(getScenario().skills),{passive:true});
-const analyzerPlayer=player($('#panel-analyzer'),()=>scenario==='failure'?26000:16000,renderAnalyzer,$('.analyzer-play'),['play','pause','replay']);
+const analyzerPlayer=player($('#panel-analyzer'),()=>scenario==='failure'?16000:scenario==='success'?24000:16000,renderAnalyzer,$('.analyzer-play'),['play','pause','replay']);
 $$('[data-scenario]').forEach(b=>b.addEventListener('click',()=>{scenario=b.dataset.scenario;analyzerPlayer.pause();buildTrajectory();analyzerPlayer.seek(0);inspectStep();if(effects)analyzerPlayer.play();else analyzerPlayer.seek(1);}));
 $('#analysis-position').addEventListener('input',e=>analyzerPlayer.seek(Number(e.target.value)));
 $('.analysis-restart').addEventListener('click',()=>{selectedStep=-1;$('.trajectory-list').scrollTop=0;lastScanned=-1;analyzerPlayer.seek(0);inspectStep();analyzerPlayer.play();});
