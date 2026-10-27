@@ -26,3 +26,14 @@
 .method-lab input[type=range]{appearance:none;-webkit-appearance:none;background:transparent;outline:none}.method-lab input[type=range]::-webkit-slider-runnable-track{height:5px;border-radius:6px;background:#e8dfef;border:0}.method-lab input[type=range]::-moz-range-track{height:5px;border-radius:6px;background:#e8dfef;border:0}.method-lab input[type=range]::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:15px;height:15px;margin-top:-5px;background:#b497c8;border:2px solid #fff;border-radius:50%;box-shadow:0 0 0 1px #cbb4da,0 2px 5px #a481bf20;transition:box-shadow .2s}.method-lab input[type=range]::-moz-range-thumb{width:12px;height:12px;background:#b497c8;border:2px solid #fff;border-radius:50%;box-shadow:0 0 0 1px #cbb4da}.method-lab input[type=range]:hover::-webkit-slider-thumb{box-shadow:0 0 0 4px #cbb4da30}.method-lab input[type=range]:focus-visible{outline:2px solid #cbb4da;outline-offset:3px}.curve-reference{width:100%;justify-content:center;color:#a38cb2;font-size:12px;margin-top:5px}.analysis-inspector{color:#7d668d}.lab-footer .inference-badge{background:#edf5f0;color:#719582}
 @media(max-width:600px){.curve-reference{font-size:11px}.analyzer-model .lab-overline{font-size:10px}.analyzer-status{font-size:10px}}
 @media(max-width:600px){.chart-labels text{font-size:26px}.axis-name{font-size:24px}.formula-chip{font-size:13px}.curve-legend{font-size:12px}.curve-reference{font-size:12px}.inference-badge{font-size:12px}.trajectory-legend{font-size:12px;gap:11px}.skill-output-head{font-size:11px}.lab-tabs strong{font-size:13px}}
+
+/* Complete recorded rollouts stay readable inside the mechanism panel. */
+.trajectory-source{margin-top:7px;color:#baa9c7;font-size:13px;line-height:1.5}
+.trajectory-view{align-self:start}
+.trajectory-list{max-height:570px;overflow-y:auto;overscroll-behavior:contain;scrollbar-color:#8e729f #302a3c}
+.trajectory-step{flex-shrink:0}
+.mask-cells{display:grid;grid-template-columns:repeat(auto-fill,minmax(34px,1fr));max-height:190px;overflow-y:auto;gap:6px}
+.mask-cells>span{min-width:34px}
+.generated-skill-top{flex-wrap:wrap}
+.generated-skill-top strong{max-width:100%;white-space:normal;overflow-wrap:anywhere;line-height:1.5}
+@media(max-width:600px){.trajectory-list{max-height:440px}.trajectory-source{font-size:12px}.mask-cells{grid-template-columns:repeat(auto-fill,minmax(32px,1fr))}}
