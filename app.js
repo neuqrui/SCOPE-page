@@ -112,47 +112,34 @@
     if (!config.anonymous && config.authors.length) {
       authors.replaceChildren();
       config.authors.forEach((author, index) => {
-        if (index) authors.append(' · ');
+        if (index) authors.append(', ');
         const url = safeWebUrl(author.url);
         const name = document.createElement(url ? 'a' : 'span');
         name.textContent = author.name;
         if (url) { name.href = url; name.target = '_blank'; name.rel = 'noopener'; }
         authors.append(name);
         if (author.affiliation) {
-          const affiliation = document.createElement('span');
+          const affiliation = document.createElement('sup');
           affiliation.className = 'author-affiliation';
           affiliation.textContent = author.affiliation;
           authors.append(affiliation);
         }
       });
     } else authors.textContent = t('authors');
-    // Anonymous previews do not expose unannounced public resources.
-    $$('[data-public-resource]').forEach((link) => link.remove());
-    if (!config.anonymous) {
-      [['code', config.codeUrl], ['arxiv', config.arxivUrl]].forEach(([key, value]) => {
-        const url = safeWebUrl(value);
-        if (!url) return;
-        const link = document.createElement('a');
-        link.href = url;
-        link.target = '_blank';
-        link.rel = 'noopener';
-        link.className = 'button button-secondary';
-        link.dataset.publicResource = key;
-        link.textContent = `${t(key)} ↗`;
-        $('#resource-links').append(link);
-      });
+    const paperLink = $('#paper-link');
+    const paperUrl = safeWebUrl(config.paperUrl);
+    if (paperLink && paperUrl) {
+      paperLink.href = paperUrl;
+      paperLink.removeAttribute('aria-disabled');
+      paperLink.classList.remove('is-placeholder');
+      paperLink.querySelector('[data-i18n]').dataset.i18n = 'paper';
+      paperLink.querySelector('[data-i18n]').textContent = t('paper');
     }
-    $('#citation')?.remove();
-    if (!config.anonymous && config.bibtex) {
-      const details = document.createElement('details');
-      details.id = 'citation';
-      details.className = 'citation-block';
-      const summary = document.createElement('summary');
-      summary.textContent = t('citation');
-      const code = document.createElement('pre');
-      code.textContent = config.bibtex;
-      details.append(summary, code);
-      $('#analysis').after(details);
+    const bibtex = $('#citation-bibtex');
+    if (bibtex && config.bibtex) {
+      bibtex.textContent = config.bibtex;
+      bibtex.hidden = false;
+      $('#citation-placeholder').hidden = true;
     }
     if (!config.anonymous) $('#publication-status').textContent = language === 'zh' ? '研究项目主页' : 'Research project';
   }

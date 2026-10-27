@@ -2,9 +2,12 @@
 
 Bilingual academic project page for **SCOPE: Selective Critical-Step On-Policy Self-Distillation for Agentic Reinforcement Learning**.
 
-Published site: https://neuqrui.github.io/SCOPE-page/
+- Project page: https://neuqrui.github.io/SCOPE-page/
+- Code: https://github.com/neuqrui/SCOPE
+- SFT models and datasets: https://huggingface.co/collections/neuqrui/scope
+- Training logs: https://swanlab.cn/@67r/scope-exp/v1/vy74zd/overview
 
-This version preserves anonymous author information. The page includes full experiment tables for three backbones, an interactive method walkthrough, and ALFWorld / WebShop trajectory replays. Each replay gallery contains four successful and two failed recorded episodes. ALFWorld scenes are text-based 3D reconstructions; WebShop illustrations are schematic.
+This is the **non-anonymous** page for the public SCOPE release. It shows the author list and affiliations from the updated manuscript, full main-result tables for three backbones, an interactive method walkthrough, ALFWorld / WebShop trajectory replays, and experiment figures. Each replay gallery contains four successful and two failed recorded episodes. ALFWorld scenes are text-based 3D reconstructions; WebShop illustrations are schematic. The paper URL and BibTeX remain placeholders until the preprint is posted.
 
 ## Preview locally
 
@@ -16,7 +19,7 @@ Open http://127.0.0.1:8000/. Use an HTTP server rather than opening index.html d
 
 ## Maintain
 
-- `config.js`: paper URL, author anonymity, and optional public resource links.
+- `config.js`: author names, public code/resource URLs, and eventual paper/BibTeX fields.
 - `content.js` and `index.html`: bilingual copy and default English content.
 - `data.js`: complete main experimental results.
 - `method/`: interactive method walkthrough.
@@ -44,7 +47,7 @@ The `experience/` directory adds the visual layer and the three mechanism demos:
 - A pairwise length explorer with default temperature 0.1, adjustable successful trajectory lengths, and common length rescaling. The fixed-horizon absolute bonus is explicitly an illustrative mathematical comparison. Ablation figures follow the supplied results, Table 2: Qwen2.5-3B at step 180 (93.0 / 97.7 / 98.4 percent).
 - Animated benchmark bars using `data.js`, synchronized with the existing three-backbone results table. Methods can be toggled; keyboard focus or a tap exposes each value.
 
-Copy is bilingual. All additions are dependency-free, use relative asset paths, and work on GitHub Pages without a build step. `config.js` remains the place to add verified author and resource information. The existing icon is preserved for a separate icon update.
+Copy is bilingual. All additions are dependency-free, use relative asset paths, and work on GitHub Pages without a build step. The supplied mascot is used in the navigation, hero wordmark, and favicon.
 
 ### Motivation, reading and automatic playback
 
@@ -54,8 +57,8 @@ Copy is bilingual. All additions are dependency-free, use relative asset paths, 
 - `experience/refinements.css` unifies reading sizes and separates the navigation's active dot from the reading-progress line.
 - Every WebShop episode has a full `taskZh` translation. Original task strings, actions and observations remain intact.
 
-### Presentation and manuscript access
+### Public release figures and manuscript access
 
-The public page has no manuscript link, embedded manuscript, or manuscript file. Reference PDFs belong outside this website directory. Do not copy them into a Pages deployment. Explanatory animation notes remain in these maintenance instructions rather than in the visitor-facing presentation.
+The updated Figure 1, Figure 7, and appendix Figures 9–10 were extracted from the revised manuscript supplied on 2026-10-27. Figure 9 shows ALFWorld single-run validation for Qwen2.5-3B/7B; Figure 10 shows the same for WebShop. The page links to the live SwanLab training logs and Hugging Face collection. Figure captions follow the updated manuscript numbering. No manuscript PDF is deployed: only the paper link and citation placeholders are visible until release. Set `paperUrl` and `bibtex` in `config.js` when they are available. Explanatory animation notes remain in these maintenance instructions rather than in the visitor-facing presentation.
 
 `experience/navigation.js` maintains the left contents list while scrolling; on narrow screens it becomes an expandable contents control. Clicking or keyboard-activating the SCOPE wordmark emits a short particle burst when effects are enabled.
