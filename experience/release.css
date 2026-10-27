@@ -32,6 +32,38 @@
 .error-localization .paper-figure { min-width: 0; }
 .error-localization .figure-open { padding: 15px; background: white; }
 .error-localization figcaption { font-size: 14px; line-height: 1.6; }
+@media(min-width:701px) { .analysis-pair .efficiency-figure .figure-open { height:340px; } .analysis-pair .efficiency-figure .figure-open img { max-height:300px; } }
+.analysis-pair>article { min-width:0; }
+.efficiency-figure { min-width:0; width:100%; }
+.efficiency-chart-scroll { width:100%; max-width:100%; }
+.efficiency-swipe-hint { display:none; }
+.ablation-table-shell { margin-top:33px; padding:26px 28px 20px; border:1px solid #e4dce9; border-radius:22px; background:#fff; box-shadow:0 10px 30px #634b8110; }
+.ablation-table-scroll { max-width:100%; overflow-x:auto; }
+.ablation-table { width:100%; min-width:830px; border-collapse:separate; border-spacing:0; font-size:15px; font-variant-numeric:tabular-nums; }
+.ablation-table caption { caption-side:top; padding:0 0 18px; color:#3b334b; font-size:18px; font-weight:650; text-align:left; line-height:1.45; }
+.ablation-table thead th { padding:11px 13px; border-bottom:2px solid #c9b9d9; color:#534568; font-size:14px; font-weight:700; text-align:right; white-space:nowrap; }
+.ablation-table thead th:first-child { width:250px; text-align:left; }
+.ablation-table tbody th,.ablation-table tbody td { padding:11px 13px; border-bottom:1px solid #e9e3ed; line-height:1.45; }
+.ablation-table tbody th { color:#3c3548; font-weight:560; text-align:left; white-space:nowrap; }
+.ablation-table tbody td { color:#555063; text-align:right; }
+.ablation-table tbody td:last-child { background:#f7f2fb; font-weight:500; color:#654b8b; }
+.ablation-table tbody td.best { font-weight:760; color:#42366b; }
+.ablation-table .ablation-full th,.ablation-table .ablation-full td { background:#f0e9f8; }
+.ablation-table .ablation-full th { color:#65458e; font-weight:750; }
+.ablation-table .ablation-group th { padding:11px 13px 8px; background:#f8f6fa; color:#89729c; font-size:14px; font-weight:680; letter-spacing:.2px; }
+.ablation-table-shell>p { margin-top:15px; color:#776f80; font-size:14px; line-height:1.7; }
+.sensitivity-panel { margin-top:64px; padding-top:48px; border-top:1px solid #deddd7; }
+.sensitivity-heading { max-width:800px; margin:0 auto 28px; }
+.sensitivity-heading h3 { font-size:clamp(27px,3vw,34px); font-weight:630; line-height:1.25; }
+.sensitivity-heading>p:not(.analysis-tag) { margin-top:14px; color:#696578; font-size:17px; line-height:1.75; }
+.sensitivity-panel .paper-figure { margin-top:25px; }
+.sensitivity-panel .figure-open { width:100%; padding:22px; background:#fff; border-radius:18px; }
+.sensitivity-panel .figure-open img { width:100%; height:auto; }
+.sensitivity-curves-figure figcaption,.sensitivity-taskwise-figure figcaption { margin-top:12px; font-size:15px; line-height:1.65; }
+.sensitivity-taskwise-figure { max-width:800px; margin-inline:auto; }
+.sensitivity-mobile-gallery { display:none; }
+.sensitivity-swipe-hint { display:none; }
+.sensitivity-heatmap-scroll { max-width:100%; }
 .resource-section { border-top: 1px solid #e5e1e9; }
 .resource-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 18px; }
 .resource-grid a { position: relative; display: flex; flex-direction: column; align-items: start; min-height: 206px; padding: 28px; border: 1px solid #ded6e9; border-radius: 23px; background: linear-gradient(145deg,#fff,#faf8fe); box-shadow: 0 12px 35px #6e509312; transition: transform .2s, box-shadow .2s; }
@@ -59,3 +91,26 @@
   .resource-button-icon.icon-huggingface { width:20px; height:20px; margin-inline:-1px; }
 }
 @media(max-width:360px) { .hero-actions .is-placeholder { white-space:normal; line-height:1.25; } }
+@media(max-width:700px) {
+  .analysis-pair article>.efficiency-swipe-hint { display:block; margin-top:16px; color:#806697; font-size:14px; font-weight:600; line-height:1.5; }
+  .efficiency-chart-scroll { overflow-x:auto; overscroll-behavior-inline:contain; }
+  .analysis-pair .efficiency-figure .efficiency-chart-scroll .figure-open { width:560px; max-width:none; }
+  .ablation-table-shell { padding:19px 14px 16px; margin-top:26px; }
+  .ablation-table { font-size:14px; }
+  .ablation-table caption { font-size:16px; }
+  .ablation-table-shell>p { font-size:13px; }
+  .sensitivity-panel { margin-top:49px; padding-top:39px; }
+  .sensitivity-heading h3 { font-size:28px; }
+  .sensitivity-heading>p:not(.analysis-tag) { font-size:16px; }
+  .sensitivity-panel .figure-open { padding:10px; }
+  .sensitivity-curves-figure figcaption,.sensitivity-taskwise-figure figcaption { font-size:14px; }
+  .sensitivity-curves-figure { display:none; }
+  .sensitivity-mobile-gallery { display:block; margin-top:22px; }
+  .sensitivity-mobile-legend { margin-bottom:14px; color:#7a638f; font-size:14px; line-height:1.6; }
+  .sensitivity-mobile-grid { display:grid; gap:21px; }
+  .sensitivity-mobile-grid .paper-figure { margin-top:0; }
+  .sensitivity-mobile-grid figcaption { margin-top:10px; font-size:15px; line-height:1.65; }
+  .sensitivity-swipe-hint { display:block; margin-top:25px; color:#806697; font-size:14px; font-weight:600; }
+  .sensitivity-heatmap-scroll { overflow-x:auto; overscroll-behavior-inline:contain; }
+  .sensitivity-taskwise-figure .sensitivity-heatmap-scroll .figure-open { width:650px; max-width:none; }
+}
