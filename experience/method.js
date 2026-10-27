@@ -59,34 +59,45 @@ function player(panel, duration, render, button, labels) {
 // Recorded training rollouts. The English observations and Analyzer fields come from the saved logs.
 const scenarioTranslations = {
   success: {
-    goal: '把杯子加热后放进冰箱',
-    reasons: ['第 3、4 步，智能体回到了已经检查过的餐桌，又去了与寻找杯子无关的炉灶；它本应继续检查尚未访问的柜子或抽屉。'],
-    skills: ['在某处没有找到目标物后，不要重复访问；应系统地检查尚未访问的容器，并优先搜索容器而非普通台面。'],
+    goal: '寻找可机洗、棉氨纶材质、经典版型、短袖、estate blue 色、L 码、低于 50 美元的男士正装衬衫。',
+    reasons: [
+      '第 1 步点击的是短袖 T 恤，并非任务要求的正装衬衫；搜索结果中也没有证实其棉氨纶材质和经典版型。',
+      '第 4 步购买前仍未确认商品是正装衬衫及其材质和版型；商品标题显示它是圆领短袖口袋 T 恤。',
+    ],
+    skills: [
+      '点击搜索结果前，先核对标题和可见属性是否符合商品类别及关键材质；若没有匹配结果，应优化搜索词。',
+      '购买前核对标题、描述或商品特性中的类别、材质、版型、颜色和尺码；不能仅凭价格购买不符合要求的商品。',
+    ],
   },
   failure: {
-    goal: '把热杯子放到咖啡机处',
-    reasons: ['第 9—18 步，智能体先把未加热的杯子放到咖啡机上，随后空手寻找微波炉，最终没有完成热杯子的任务。'],
-    skills: ['任务要求物体处于特定状态（如热、干净或切片）时，先用相应设备完成状态转换，并在放置前确认物体状态正确。'],
+    goal: '寻找可机洗、棉氨纶材质、经典版型、短袖、navy 色、S 码、低于 40 美元的男士正装衬衫。',
+    reasons: [
+      '第 1 步选中的是女式毛衣，与男士正装衬衫及其材质、版型和袖长要求明显不符。',
+      '第 4 步点击购买时，商品标题仍标明是女式毛衣，而不是要求的男士正装衬衫。',
+    ],
+    skills: [
+      '如果搜索结果大多不相关，不要直接点进第一个结果；应调整搜索词或继续寻找更匹配的商品。',
+      '点击购买前，确认商品标题中的性别和类别符合要求；若显示其他类别或性别，应返回搜索。',
+    ],
   },
-  clean: { goal: '冷却锅并放到架子上', reasons: [], skills: [] },
+  clean: { goal: '寻找可机洗、长袖、charcoal heather 色、4X 大码、低于 40 美元的男士 T 恤。', reasons: [], skills: [] },
 };
-function translateRecordedFeedback(value) {
-  const items = list => list.replace(/\b(?:a|an) (?=[a-z])/g, '').replace(/, and /g, '、').replace(/, /g, '、');
-  let match;
-  if ((match = value.match(/^Rollout ended · episode reward (.+)$/))) return `轨迹结束 · 回报 ${match[1]}`;
-  if (value === 'Nothing happens.') return '没有发生变化。';
-  if (value === 'You are not carrying anything.') return '你没有携带任何物品。';
-  if ((match = value.match(/^There's nothing special about (.+)\.$/))) return `${match[1]} 没有特别之处。`;
-  if ((match = value.match(/^You open the (.+?)\. The .+? is open\. In it, you see (.+)\.$/))) return `你打开 ${match[1]}，里面有：${items(match[2])}。`;
-  if ((match = value.match(/^You close the (.+?)\.$/))) return `你关闭 ${match[1]}。`;
-  if ((match = value.match(/^You arrive at (.+?)\. On the .+?, you see (.+)\.$/))) return match[2] === 'nothing' ? `你来到 ${match[1]}，这里没有物品。` : `你来到 ${match[1]}，看到：${items(match[2])}。`;
-  if ((match = value.match(/^You arrive at (.+?)\. The .+? is (closed|open)\.$/))) return `你来到 ${match[1]}，它是${match[2] === 'closed' ? '关闭' : '打开'}的。`;
-  if ((match = value.match(/^You pick up the (.+?) from the (.+?)\.$/))) return `你从 ${match[2]} 拿起 ${match[1]}。`;
-  if ((match = value.match(/^You move the (.+?) to the (.+?)\.$/))) return `你把 ${match[1]} 放到 ${match[2]}。`;
-  if ((match = value.match(/^You cool the (.+?) using the (.+?)\.$/))) return `你用 ${match[2]} 冷却 ${match[1]}。`;
-  if ((match = value.match(/^You heat the (.+?) using the (.+?)\.$/))) return `你用 ${match[2]} 加热 ${match[1]}。`;
-  if ((match = value.match(/^You turn on the (.+?)\.$/))) return `你打开 ${match[1]}。`;
-  return value;
+function summarizeRecordedObservation(value, lang) {
+  const zh=lang==='zh';
+  const reward=value.match(/^Rollout ended · episode reward (.+)$/);
+  if(reward)return zh?`轨迹结束 · 回报 ${reward[1]}`:value;
+  const parts=value.split(' [SEP] ').map(part=>part.replace(/^'|'$/g,''));
+  const price=parts.findIndex(part=>part.startsWith('Price: '));
+  if(price>0)return `${zh?'商品页摘录':'Product page excerpt'} · ${parts[price-1]} · ${parts[price]}`;
+  const firstProduct=parts.findIndex(part=>/^[A-Z0-9]{10}$/.test(part));
+  if(firstProduct>=0){
+    const items=[];
+    for(let i=firstProduct;i<parts.length-2&&items.length<2;i++){
+      if(/^[A-Z0-9]{10}$/.test(parts[i]))items.push(`${parts[i+1]} · ${parts[i+2]}`);
+    }
+    return `${zh?'搜索结果摘录':'Search results excerpt'} · ${items.join(' / ')}`;
+  }
+  return `${zh?'页面摘录':'Page excerpt'} · ${parts.slice(0,3).join(' · ')}`;
 }
 const scenarios = Object.fromEntries(Object.entries(recordedAnalyzerExamples).map(([name, record]) => {
   const translated = scenarioTranslations[name];
@@ -95,7 +106,7 @@ const scenarios = Object.fromEntries(Object.entries(recordedAnalyzerExamples).ma
     goal: [record.goal, translated.goal],
     outcome: record.outcome,
     actions: record.actions,
-    feedback: record.feedback.map(value => [value, translateRecordedFeedback(value)]),
+    feedback: record.feedback.map(value => [summarizeRecordedObservation(value,'en'), summarizeRecordedObservation(value,'zh')]),
     skills: record.skills.map((skill, index) => ({
       steps: skill.target_steps,
       reason: [skill.error_reason, translated.reasons[index]],
@@ -108,7 +119,7 @@ const getScenario=()=>scenarios[scenario];
 function buildTrajectory() {
   const data=getScenario(); generatedKey=''; selectedStep=-1; lastScanned=-1;
   $('.analyzer-goal').textContent=data.goal[language==='zh'?1:0];
-  $('.trajectory-source').textContent=local(`Qwen2.5-3B · train step ${data.source.training_step} · #${data.source.trajectory_id.slice(0,8)}`,`Qwen2.5-3B · 训练第 ${data.source.training_step} 步 · #${data.source.trajectory_id.slice(0,8)}`);
+  $('.trajectory-source').textContent=local(`WebShop · Qwen2.5-3B · train step ${data.source.training_step} · #${data.source.trajectory_id.slice(0,8)}`,`WebShop · Qwen2.5-3B · 训练第 ${data.source.training_step} 步 · #${data.source.trajectory_id.slice(0,8)}`);
   $('.trajectory-outcome').textContent=data.outcome?local('SUCCESS ✓','成功 ✓'):local('FAILURE ×','失败 ×');
   $('.trajectory-outcome').dataset.success=String(data.outcome);
   $('.reference-copy').textContent=local('Saved Analyzer output · step indices start at 0, as in the training log.','训练记录中的 Analyzer 原始输出 · 步骤编号从 0 开始。');
@@ -138,7 +149,7 @@ function renderAnalyzer(position) {
   const data=getScenario(), n=data.actions.length, scanned=Math.min(n,Math.floor(position/.53*n)), progress=Math.max(0,(position-.55)/.43);
   const revealed=data.skills.filter((s,i)=>progress>=(i+.05)/Math.max(1,data.skills.length));
   const allSelected=data.skills.flatMap(s=>s.steps), done=position>=.99;
-  $$('.trajectory-step').forEach((b,i)=>{const scannedStep=i<scanned;b.classList.toggle('is-scanning',!done&&i===scanned);b.classList.toggle('is-scanned',scannedStep);b.classList.toggle('is-error',scannedStep&&allSelected.includes(i));b.querySelector('.trajectory-step-status').textContent=scannedStep?(allSelected.includes(i)?'!':'✓'):'';});
+  $$('.trajectory-step').forEach((b,i)=>{const scannedStep=i<scanned;b.classList.toggle('is-scanning',!done&&i===scanned);b.classList.toggle('is-scanned',scannedStep);b.classList.toggle('is-error',scannedStep&&allSelected.includes(i));b.querySelector('.trajectory-step-status').textContent=scannedStep?(allSelected.includes(i)?'!':'·'):'';});
   if (scanned !== lastScanned && scanned < n && position < .55) {
     lastScanned=scanned;
     const list=$('.trajectory-list'), active=list.children[scanned];

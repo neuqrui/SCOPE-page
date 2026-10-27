@@ -1,54 +1,48 @@
-// Saved Qwen2.5-3B training rollouts (steps 151, 154, 158).
-// Actions, post-action observations, target_steps, error_reason, and skill match the server records.
-// Step indices are zero-based, as in the training logs. The terminal reward line is derived from episode_reward.
+// Saved Qwen2.5-3B WebShop training rollouts (steps 152, 162, 170).
+// Actions, post-action observations, target_steps, error_reason, and skill match server records.
+// Step indices are zero-based; the final reward line is derived from episode_reward.
 export default {
   "success": {
     "source": {
       "model": "Qwen2.5-3B",
-      "training_step": 151,
-      "trajectory_id": "fc83f088-b3dc-444c-830e-f95a7c78bf5a",
+      "training_step": 162,
+      "trajectory_id": "ff45affd-a2af-477a-a643-82932da25457",
       "split": "train",
-      "run": "gatetanh_c1_step_skill_none_length_pairwise"
+      "environment": "WebShop",
+      "run": "grpo_opsd_kl_qwen2.5_3b_coef0.01_sampled_kl_gatetanh_c1_step_skill_none_length_pairwise_from_sftv2-3epoch-glm2"
     },
-    "goal": "heat some cup and put it in fridge",
+    "goal": "Find me machine wash men's dress shirts with cotton spandex, classic fit, short sleeve with color: estate blue, and size: large, and price lower than 50.00 dollars",
     "outcome": true,
     "reward": 10.0,
     "actions": [
-      "go to diningtable 1",
-      "go to countertop 1",
-      "go to countertop 2",
-      "go to diningtable 1",
-      "go to stoveburner 1",
-      "go to fridge 1",
-      "open fridge 1",
-      "take cup 1 from fridge 1",
-      "go to microwave 1",
-      "heat cup 1 with microwave 1",
-      "go to fridge 1",
-      "move cup 1 to fridge 1"
+      "search[men's dress shirts cotton spandex classic fit short sleeve estate blue large size under $50]",
+      "click[b07hrfsnl4]",
+      "click[large]",
+      "click[estate blue]",
+      "click[buy now]"
     ],
     "feedback": [
-      "You arrive at diningtable 1. On the diningtable 1, you see a apple 1, a bowl 1, a bread 1, a dishsponge 3, a egg 3, a egg 2, a houseplant 1, a potato 3, and a spoon 2.",
-      "You arrive at countertop 1. On the countertop 1, you see a saltshaker 2.",
-      "You arrive at countertop 2. On the countertop 2, you see a butterknife 1, a dishsponge 1, a fork 1, a kettle 1, a papertowelroll 1, a saltshaker 3, a spatula 3, and a tomato 1.",
-      "You arrive at diningtable 1. On the diningtable 1, you see a apple 1, a bowl 1, a bread 1, a dishsponge 3, a egg 3, a egg 2, a houseplant 1, a potato 3, and a spoon 2.",
-      "You arrive at stoveburner 1. On the stoveburner 1, you see a pot 1.",
-      "You arrive at fridge 1. The fridge 1 is closed.",
-      "You open the fridge 1. The fridge 1 is open. In it, you see a cup 1, a potato 2, and a potato 1.",
-      "You pick up the cup 1 from the fridge 1.",
-      "You arrive at microwave 1. The microwave 1 is closed.",
-      "You heat the cup 1 using the microwave 1.",
-      "You arrive at fridge 1. The fridge 1 is open. In it, you see a potato 2, and a potato 1.",
+      "'Back to Search' [SEP] 'Page 1 (Total results: 50)' [SEP] 'Next >' [SEP] 'B09QQP3356' [SEP] 'HAUKLIE Men's Sports Waffle Ribbed Polo Shirts Summer Short Sleeve Cotton Muscle Quarter-Zip Henley T-Shirt Tunics Tops' [SEP] '$10.99' [SEP] 'B07HRFSNL4' [SEP] 'Nautica Men's Solid Crew Neck Short-Sleeve Pocket T-Shirt' [SEP] '$16.05 to $40.98' [SEP] 'B09QGK5XHZ' [SEP] 'WENKOMG1 Men's Long Sleeve Undershirt with Mask Turtleneck Hooded T-Shirt Solid Color Workout Tops Zipper Side Slit Shirts Slim Fit Sweatshirt Spring/Summer Tee Shirts(Gray,)' [SEP] '$8.39' [SEP] 'B085WQKRRJ' [SEP] 'CLANMILUMS Men's Classic Comfort Soft Regular Fit Short Sleeve Henley T-Shirt Tee' [SEP] '$17.99 to $19.99' [SEP] 'B09R9YCM6R' [SEP] 'XXBR Summer T-shirts for Mens, Soldier Short Sleeve 3D Street Vintage Printed Shirt Slim Fit Muscle Casual Tee Tops' [SEP] '$8.98 to $11.99' [SEP] 'B09S3BN15C' [SEP] 'Mens Linen Shirt,Men's Striped Shirts Casual Short Sleeve Button Down Shirts Regular Fit Hawaiian Shirts Beach Tees Tops' [SEP] '$3.78 to $11.38' [SEP] 'B09NNMV9LN' [SEP] 'JSPOYOU Mens Short Sleeve Crewneck 3D Graphic Tunic Shirts Big & Tall Tie Dye Summer Top Basic Designed Classic Cotton Shirt' [SEP] '$3.99 to $10.99' [SEP] 'B09KLQLLT2' [SEP] 'Long Sleeve Superhero T Shirt Tank Top Mens Compression Shirt Men Workout Fitness Gym Shirt' [SEP] '$19.99' [SEP] 'B07JVVDJ6L' [SEP] 'Canadian Tuxedo T Shirt - Novelty Denim Tux T-Shirt' [SEP] '$19.99' [SEP] 'B07F2G93BJ' [SEP] 'Amazon Essentials Men's Slim-fit Long-Sleeve Solid Pocket Oxford Shirt' [SEP] '$18.5'",
+      "'Back to Search' [SEP] '< Prev' [SEP] 'size' [SEP] 'x-small' [SEP] 'small' [SEP] 'medium' [SEP] 'large' [SEP] 'large tall' [SEP] 'x-large' [SEP] 'x-large tall' [SEP] 'xx-large' [SEP] 'xx-large tall' [SEP] '3x-large tall' [SEP] '4x-large tall' [SEP] '5x-large tall' [SEP] '1x' [SEP] '2x' [SEP] '3x' [SEP] '4x' [SEP] '5x' [SEP] '6x' [SEP] 'color' [SEP] 'navy' [SEP] 'noon blue' [SEP] 'grey heather' [SEP] 'nautica red' [SEP] 'bright white' [SEP] 'true black' [SEP] 'pale coral' [SEP] 'cradle pink' [SEP] 'bright aqua' [SEP] 'mint spring' [SEP] 'monaco blue' [SEP] 'charcoal heather (dark)' [SEP] 'barolo' [SEP] 'tidal green' [SEP] 'charcoal heather (light)' [SEP] 'estate blue' [SEP] 'patina green' [SEP] 'black' [SEP] 'bright aqua blue' [SEP] 'bright cobalt' [SEP] 'coral sands' [SEP] 'deep anchor heather' [SEP] 'hawaiian ocean' [SEP] 'melon berry' [SEP] 'pine forest green' [SEP] 'shipwreck burgundy' [SEP] 'white' [SEP] 'zest' [SEP] 'deep atlantic' [SEP] 'delft' [SEP] 'pale coral red' [SEP] 'Nautica Men's Solid Crew Neck Short-Sleeve Pocket T-Shirt' [SEP] 'Price: $16.05 to $40.98' [SEP] 'Rating: N.A.' [SEP] 'Description' [SEP] 'Features' [SEP] 'Reviews' [SEP] 'Buy Now'",
+      "'Back to Search' [SEP] '< Prev' [SEP] 'size' [SEP] 'x-small' [SEP] 'small' [SEP] 'medium' [SEP] 'large' [SEP] 'large tall' [SEP] 'x-large' [SEP] 'x-large tall' [SEP] 'xx-large' [SEP] 'xx-large tall' [SEP] '3x-large tall' [SEP] '4x-large tall' [SEP] '5x-large tall' [SEP] '1x' [SEP] '2x' [SEP] '3x' [SEP] '4x' [SEP] '5x' [SEP] '6x' [SEP] 'color' [SEP] 'navy' [SEP] 'noon blue' [SEP] 'grey heather' [SEP] 'nautica red' [SEP] 'bright white' [SEP] 'true black' [SEP] 'pale coral' [SEP] 'cradle pink' [SEP] 'bright aqua' [SEP] 'mint spring' [SEP] 'monaco blue' [SEP] 'charcoal heather (dark)' [SEP] 'barolo' [SEP] 'tidal green' [SEP] 'charcoal heather (light)' [SEP] 'estate blue' [SEP] 'patina green' [SEP] 'black' [SEP] 'bright aqua blue' [SEP] 'bright cobalt' [SEP] 'coral sands' [SEP] 'deep anchor heather' [SEP] 'hawaiian ocean' [SEP] 'melon berry' [SEP] 'pine forest green' [SEP] 'shipwreck burgundy' [SEP] 'white' [SEP] 'zest' [SEP] 'deep atlantic' [SEP] 'delft' [SEP] 'pale coral red' [SEP] 'Nautica Men's Solid Crew Neck Short-Sleeve Pocket T-Shirt' [SEP] 'Price: $16.05 to $40.98' [SEP] 'Rating: N.A.' [SEP] 'Description' [SEP] 'Features' [SEP] 'Reviews' [SEP] 'Buy Now'",
+      "'Back to Search' [SEP] '< Prev' [SEP] 'size' [SEP] 'x-small' [SEP] 'small' [SEP] 'medium' [SEP] 'large' [SEP] 'large tall' [SEP] 'x-large' [SEP] 'x-large tall' [SEP] 'xx-large' [SEP] 'xx-large tall' [SEP] '3x-large tall' [SEP] '4x-large tall' [SEP] '5x-large tall' [SEP] '1x' [SEP] '2x' [SEP] '3x' [SEP] '4x' [SEP] '5x' [SEP] '6x' [SEP] 'color' [SEP] 'navy' [SEP] 'noon blue' [SEP] 'grey heather' [SEP] 'nautica red' [SEP] 'bright white' [SEP] 'true black' [SEP] 'pale coral' [SEP] 'cradle pink' [SEP] 'bright aqua' [SEP] 'mint spring' [SEP] 'monaco blue' [SEP] 'charcoal heather (dark)' [SEP] 'barolo' [SEP] 'tidal green' [SEP] 'charcoal heather (light)' [SEP] 'estate blue' [SEP] 'patina green' [SEP] 'black' [SEP] 'bright aqua blue' [SEP] 'bright cobalt' [SEP] 'coral sands' [SEP] 'deep anchor heather' [SEP] 'hawaiian ocean' [SEP] 'melon berry' [SEP] 'pine forest green' [SEP] 'shipwreck burgundy' [SEP] 'white' [SEP] 'zest' [SEP] 'deep atlantic' [SEP] 'delft' [SEP] 'pale coral red' [SEP] 'Nautica Men's Solid Crew Neck Short-Sleeve Pocket T-Shirt' [SEP] 'Price: $16.05 to $40.98' [SEP] 'Rating: N.A.' [SEP] 'Description' [SEP] 'Features' [SEP] 'Reviews' [SEP] 'Buy Now'",
       "Rollout ended · episode reward 10.0"
     ],
     "skills": [
       {
         "target_steps": [
-          3,
+          1
+        ],
+        "error_reason": "Step 1 clicks on a product that is explicitly a short-sleeve t-shirt, not a dress shirt, and the search results contain no items matching the required material (cotton spandex) or fit (classic fit) criteria, so the search query was too broad and the first result was not a reasonable candidate.",
+        "skill": "Before clicking into a product from search results, verify that the product title and visible attributes match the required item type and key material specifications; if no result matches, refine the search query rather than clicking the first or most popular item.",
+        "evidence_steps": []
+      },
+      {
+        "target_steps": [
           4
         ],
-        "error_reason": "At steps 3 and 4 the agent returned to the diningtable—already visited—and to stoveburner—irrelevant to finding a cup—instead of systematically checking unvisited locations like remaining cabinets or drawers on countertops.",
-        "skill": "After visiting a location and finding no target object, do not revisit it; instead proceed to check unvisited receptacles systematically, prioritizing containers rather than surfaces.",
+        "error_reason": "Step 4 clicks 'Buy Now' without confirming that the product is actually a dress shirt with cotton spandex fabric and classic fit, as the title still shows 'Crew Neck Short-Sleeve Pocket T-Shirt' and the product description would need to verify the required attributes.",
+        "skill": "Before clicking buy, verify that all required attributes (item type, fabric material, fit, color, size) are confirmed in the product title, description, or features; do not purchase based on the price alone when the product does not match the required specifications.",
         "evidence_steps": []
       }
     ]
@@ -56,94 +50,44 @@ export default {
   "failure": {
     "source": {
       "model": "Qwen2.5-3B",
-      "training_step": 154,
-      "trajectory_id": "2b134559-ce1c-4ece-8024-a1515ad03cc6",
+      "training_step": 152,
+      "trajectory_id": "1f31dcfb-8e64-466f-a2ae-73b925c5a297",
       "split": "train",
-      "run": "gatetanh_c1_step_skill_none_length_pairwise"
+      "environment": "WebShop",
+      "run": "grpo_opsd_kl_qwen2.5_3b_coef0.01_sampled_kl_gatetanh_c1_step_skill_none_length_pairwise_from_sftv2-3epoch-glm2"
     },
-    "goal": "put a hot mug in coffeemachine",
+    "goal": "Find me machine wash men's dress shirts with cotton spandex, classic fit, short sleeve with color: navy, and size: small, and price lower than 40.00 dollars",
     "outcome": false,
     "reward": 0.0,
     "actions": [
-      "go to countertop 1",
-      "go to countertop 2",
-      "go to countertop 3",
-      "go to countertop 4",
-      "go to stoveburner 1",
-      "go to fridge 1",
-      "open fridge 1",
-      "take mug 1 from fridge 1",
-      "go to coffeemachine 1",
-      "move mug 1 to coffeemachine 1",
-      "go to microwave 1",
-      "open microwave 1",
-      "close microwave 1",
-      "go to microwave 1",
-      "go to microwave 1",
-      "inventory",
-      "go to countertop 1",
-      "go to stoveburner 1",
-      "go to microwave 1",
-      "open microwave 1",
-      "go to fridge 1",
-      "go to stoveburner 2",
-      "go to stoveburner 3",
-      "go to stoveburner 4",
-      "go to countertop 1",
-      "go to microwave 1",
-      "go to coffeemachine 1",
-      "take mug 1 from coffeemachine 1",
-      "go to microwave 1",
-      "move mug 1 to microwave 1"
+      "search[dress shirts cotton spandex classic fit small navy under $40]",
+      "click[b07dkgjr74]",
+      "click[small]",
+      "click[navy]",
+      "click[buy now]"
     ],
     "feedback": [
-      "You arrive at countertop 1. On the countertop 1, you see a fork 1, and a houseplant 1.",
-      "You arrive at countertop 2. On the countertop 2, you see a butterknife 1, a fork 2, a knife 2, a knife 1, a ladle 2, and a pot 1.",
-      "You arrive at countertop 3. On the countertop 3, you see a apple 2, a butterknife 2, a lettuce 1, a pan 1, a peppershaker 1, a saltshaker 2, a spatula 2, and a tomato 2.",
-      "You arrive at countertop 4. On the countertop 4, you see a bread 2, a bread 1, a cup 3, a egg 2, a peppershaker 2, and a potato 2.",
-      "You arrive at stoveburner 1. On the stoveburner 1, you see nothing.",
-      "You arrive at fridge 1. The fridge 1 is closed.",
-      "You open the fridge 1. The fridge 1 is open. In it, you see a apple 1, a cup 2, a cup 1, a mug 1, a potato 1, and a tomato 1.",
-      "You pick up the mug 1 from the fridge 1.",
-      "You arrive at coffeemachine 1. On the coffeemachine 1, you see nothing.",
-      "You move the mug 1 to the coffeemachine 1.",
-      "You arrive at microwave 1. The microwave 1 is closed.",
-      "You open the microwave 1. The microwave 1 is open. In it, you see nothing.",
-      "You close the microwave 1.",
-      "Nothing happens.",
-      "Nothing happens.",
-      "You are not carrying anything.",
-      "You arrive at countertop 1. On the countertop 1, you see a fork 1, and a houseplant 1.",
-      "You arrive at stoveburner 1. On the stoveburner 1, you see nothing.",
-      "You arrive at microwave 1. The microwave 1 is closed.",
-      "You open the microwave 1. The microwave 1 is open. In it, you see nothing.",
-      "You arrive at fridge 1. The fridge 1 is open. In it, you see a apple 1, a cup 2, a cup 1, a potato 1, and a tomato 1.",
-      "You arrive at stoveburner 2. On the stoveburner 2, you see nothing.",
-      "You arrive at stoveburner 3. On the stoveburner 3, you see a pot 2.",
-      "You arrive at stoveburner 4. On the stoveburner 4, you see a kettle 1.",
-      "You arrive at countertop 1. On the countertop 1, you see a fork 1, and a houseplant 1.",
-      "You arrive at microwave 1. The microwave 1 is open. In it, you see nothing.",
-      "You arrive at coffeemachine 1. On the coffeemachine 1, you see a mug 1.",
-      "You pick up the mug 1 from the coffeemachine 1.",
-      "You arrive at microwave 1. The microwave 1 is open. In it, you see nothing.",
+      "'Back to Search' [SEP] 'Page 1 (Total results: 50)' [SEP] 'Next >' [SEP] 'B07DKGJR74' [SEP] 'Amazon Brand - Daily Ritual Women's 100% Cotton Oversized Fit V-Neck Pullover Sweater' [SEP] '$20.66 to $29.2' [SEP] 'B09RVF4JP1' [SEP] 'Once Upon A Time Queen Born In 1982 T Shirts It Was Me Tank Top' [SEP] '$19.99' [SEP] 'B09QQP3356' [SEP] 'HAUKLIE Men's Sports Waffle Ribbed Polo Shirts Summer Short Sleeve Cotton Muscle Quarter-Zip Henley T-Shirt Tunics Tops' [SEP] '$10.99' [SEP] 'B07F2G93BJ' [SEP] 'Amazon Essentials Men's Slim-fit Long-Sleeve Solid Pocket Oxford Shirt' [SEP] '$18.5' [SEP] 'B00ED8OH2C' [SEP] 'Propper Men's Pack 3 t-Shirt' [SEP] '$13.37 to $47.74' [SEP] 'B00V6AB796' [SEP] 'Star Vixen Women's Cold-Shoulder Top' [SEP] '$9.38 to $30.32' [SEP] 'B07HRFSNL4' [SEP] 'Nautica Men's Solid Crew Neck Short-Sleeve Pocket T-Shirt' [SEP] '$16.05 to $40.98' [SEP] 'B09PBPZ24Z' [SEP] 'myhehthw Women's High Waisted Jeans for Women Distressed Ripped Jeans Slim Fit Butt Lifting Skinny Stretch Jeans Trousers' [SEP] '$22.99 to $25.99' [SEP] 'B09QGK5XHZ' [SEP] 'WENKOMG1 Men's Long Sleeve Undershirt with Mask Turtleneck Hooded T-Shirt Solid Color Workout Tops Zipper Side Slit Shirts Slim Fit Sweatshirt Spring/Summer Tee Shirts(Gray,)' [SEP] '$8.39' [SEP] 'B09P39QN2W' [SEP] 'I Tackled 100 Day Of School Football Boy 100th Day School T-Shirt' [SEP] '$16.99'",
+      "'Back to Search' [SEP] '< Prev' [SEP] 'size' [SEP] 'x-small' [SEP] 'small' [SEP] 'medium' [SEP] 'large' [SEP] 'x-large' [SEP] 'xx-large' [SEP] 'color' [SEP] 'black' [SEP] 'burgundy' [SEP] 'charcoal heather' [SEP] 'light heather grey' [SEP] 'lilac' [SEP] 'navy' [SEP] 'oatmeal heather' [SEP] 'olive' [SEP] 'white' [SEP] 'Amazon Brand - Daily Ritual Women's 100% Cotton Oversized Fit V-Neck Pullover Sweater' [SEP] 'Price: $20.66 to $29.2' [SEP] 'Rating: N.A.' [SEP] 'Description' [SEP] 'Features' [SEP] 'Reviews' [SEP] 'Buy Now'",
+      "'Back to Search' [SEP] '< Prev' [SEP] 'size' [SEP] 'x-small' [SEP] 'small' [SEP] 'medium' [SEP] 'large' [SEP] 'x-large' [SEP] 'xx-large' [SEP] 'color' [SEP] 'black' [SEP] 'burgundy' [SEP] 'charcoal heather' [SEP] 'light heather grey' [SEP] 'lilac' [SEP] 'navy' [SEP] 'oatmeal heather' [SEP] 'olive' [SEP] 'white' [SEP] 'Amazon Brand - Daily Ritual Women's 100% Cotton Oversized Fit V-Neck Pullover Sweater' [SEP] 'Price: $20.66 to $29.2' [SEP] 'Rating: N.A.' [SEP] 'Description' [SEP] 'Features' [SEP] 'Reviews' [SEP] 'Buy Now'",
+      "'Back to Search' [SEP] '< Prev' [SEP] 'size' [SEP] 'x-small' [SEP] 'small' [SEP] 'medium' [SEP] 'large' [SEP] 'x-large' [SEP] 'xx-large' [SEP] 'color' [SEP] 'black' [SEP] 'burgundy' [SEP] 'charcoal heather' [SEP] 'light heather grey' [SEP] 'lilac' [SEP] 'navy' [SEP] 'oatmeal heather' [SEP] 'olive' [SEP] 'white' [SEP] 'Amazon Brand - Daily Ritual Women's 100% Cotton Oversized Fit V-Neck Pullover Sweater' [SEP] 'Price: $20.66 to $29.2' [SEP] 'Rating: N.A.' [SEP] 'Description' [SEP] 'Features' [SEP] 'Reviews' [SEP] 'Buy Now'",
       "Rollout ended · episode reward 0.0"
     ],
     "skills": [
       {
         "target_steps": [
-          9,
-          10,
-          11,
-          12,
-          13,
-          14,
-          15,
-          16,
-          17,
-          18
+          1
         ],
-        "error_reason": "At steps 9-18 the agent placed the mug on the coffeemachine without first heating it, then wandered around searching for the microwave while carrying nothing, ultimately failing to complete the task of placing a HOT mug on the coffeemachine.",
-        "skill": "When a task requires an object to be in a specific state (e.g., hot, clean, sliced), process the object through the appropriate state-changing appliance (e.g., microwave, sinkbasin) before delivering it to the destination, and verify the object is in the correct state before placing it.",
+        "error_reason": "The first product clicked was a women's sweater, clearly irrelevant to the required men's dress shirts with cotton spandex, classic fit, short sleeve, and navy color.",
+        "skill": "When search results contain mostly irrelevant items, do not click into the first result; instead, refine the query or browse the most plausible result pages to find a better match before committing to a product.",
+        "evidence_steps": []
+      },
+      {
+        "target_steps": [
+          4
+        ],
+        "error_reason": "The click action at step 4 attempted to buy now while the product page still displayed 'Women's' in the title, indicating the product was still not men's dress shirts as required.",
+        "skill": "Before clicking buy now, verify the product title explicitly matches the required gender/category; if the title still shows a different category or gender, return to search rather than purchasing an incorrect product.",
         "evidence_steps": []
       }
     ]
@@ -151,28 +95,27 @@ export default {
   "clean": {
     "source": {
       "model": "Qwen2.5-3B",
-      "training_step": 158,
-      "trajectory_id": "feb74e5e-c1b0-4a6c-bf0a-53a3e5f68a32",
+      "training_step": 170,
+      "trajectory_id": "f97dc03e-58a1-49f0-9264-67cdae465b93",
       "split": "train",
-      "run": "gatetanh_c1_step_skill_none_length_pairwise"
+      "environment": "WebShop",
+      "run": "grpo_opsd_kl_qwen2.5_3b_coef0.01_sampled_kl_gatetanh_c1_step_skill_none_length_pairwise_from_sftv2-3epoch-glm2"
     },
-    "goal": "cool some pot and put it in shelf",
+    "goal": "Find me machine wash men's t-shirts with long sleeve with color: charcoal heather, and size: 4x-large big, and price lower than 40.00 dollars",
     "outcome": true,
     "reward": 10.0,
     "actions": [
-      "go to stoveburner 1",
-      "take pot 1 from stoveburner 1",
-      "go to fridge 1",
-      "cool pot 1 with fridge 1",
-      "go to shelf 1",
-      "move pot 1 to shelf 1"
+      "search[men's long sleeve t-shirt charcoal heather 4x-large big under $40]",
+      "click[b00o30jldk]",
+      "click[charcoal heather]",
+      "click[4x-large big]",
+      "click[buy now]"
     ],
     "feedback": [
-      "You arrive at stoveburner 1. On the stoveburner 1, you see a pot 1.",
-      "You pick up the pot 1 from the stoveburner 1.",
-      "You arrive at fridge 1. The fridge 1 is closed.",
-      "You cool the pot 1 using the fridge 1.",
-      "You arrive at shelf 1. On the shelf 1, you see a cup 1, and a soapbottle 1.",
+      "'Back to Search' [SEP] 'Page 1 (Total results: 50)' [SEP] 'Next >' [SEP] 'B00O30JLDK' [SEP] 'Legendary Whitetails Men's Non-Typical Long Sleeve T-Shirt' [SEP] '$10.52 to $40.5' [SEP] 'B07HRFSNL4' [SEP] 'Nautica Men's Solid Crew Neck Short-Sleeve Pocket T-Shirt' [SEP] '$16.05 to $40.98' [SEP] 'B09QGK5XHZ' [SEP] 'WENKOMG1 Men's Long Sleeve Undershirt with Mask Turtleneck Hooded T-Shirt Solid Color Workout Tops Zipper Side Slit Shirts Slim Fit Sweatshirt Spring/Summer Tee Shirts(Gray,)' [SEP] '$8.39' [SEP] 'B09QQP3356' [SEP] 'HAUKLIE Men's Sports Waffle Ribbed Polo Shirts Summer Short Sleeve Cotton Muscle Quarter-Zip Henley T-Shirt Tunics Tops' [SEP] '$10.99' [SEP] 'B078WSND96' [SEP] 'Clearance Deals Retro T-Shirt Bee Printed Blouse, 2021 Summer Fashion Boys Men 3D Round Neck Short Sleeve Tee Tops' [SEP] '$9.99 to $11.99' [SEP] 'B09Q67H373' [SEP] 'JSPOYOU 2022 Newly T-Shirt for Mens Funny 3D Graphics Pattern Crewneck Short Sleeve Tees Big and Tall Summer Casual Comfy Top' [SEP] '$1.99 to $8.99' [SEP] 'B09S3BN15C' [SEP] 'Mens Linen Shirt,Men's Striped Shirts Casual Short Sleeve Button Down Shirts Regular Fit Hawaiian Shirts Beach Tees Tops' [SEP] '$3.78 to $11.38' [SEP] 'B09RVF4JP1' [SEP] 'Once Upon A Time Queen Born In 1982 T Shirts It Was Me Tank Top' [SEP] '$19.99' [SEP] 'B09NNMV9LN' [SEP] 'JSPOYOU Mens Short Sleeve Crewneck 3D Graphic Tunic Shirts Big & Tall Tie Dye Summer Top Basic Designed Classic Cotton Shirt' [SEP] '$3.99 to $10.99' [SEP] 'B07N7TDKXQ' [SEP] 'SOCKS'NBULK Mens Cotton Crew Neck Short Sleeve T-Shirts Mix Colors Bulk' [SEP] '$38.79 to $172.8'",
+      "'Back to Search' [SEP] '< Prev' [SEP] 'color' [SEP] 'army' [SEP] 'big game field camo' [SEP] 'black' [SEP] 'cardinal' [SEP] 'charcoal heather' [SEP] 'inferno' [SEP] 'mossy oak bottomland' [SEP] 'mossy oak country' [SEP] 'mossy oak country dna' [SEP] 'mossy oak coyote' [SEP] 'slate' [SEP] 'swamp' [SEP] 'turkey' [SEP] 'flag' [SEP] 'country' [SEP] 'fish' [SEP] 'size' [SEP] 'small' [SEP] 'medium' [SEP] 'large' [SEP] 'large tall' [SEP] 'x-large' [SEP] 'x-large tall' [SEP] 'xx-large' [SEP] 'xx-large big tall' [SEP] '3x-large big' [SEP] '3x-large big tall' [SEP] '4x-large big' [SEP] '4x-large big tall' [SEP] '5x-large big' [SEP] 'Legendary Whitetails Men's Non-Typical Long Sleeve T-Shirt' [SEP] 'Price: $10.52 to $40.5' [SEP] 'Rating: N.A.' [SEP] 'Description' [SEP] 'Features' [SEP] 'Reviews' [SEP] 'Buy Now'",
+      "'Back to Search' [SEP] '< Prev' [SEP] 'color' [SEP] 'army' [SEP] 'big game field camo' [SEP] 'black' [SEP] 'cardinal' [SEP] 'charcoal heather' [SEP] 'inferno' [SEP] 'mossy oak bottomland' [SEP] 'mossy oak country' [SEP] 'mossy oak country dna' [SEP] 'mossy oak coyote' [SEP] 'slate' [SEP] 'swamp' [SEP] 'turkey' [SEP] 'flag' [SEP] 'country' [SEP] 'fish' [SEP] 'size' [SEP] 'small' [SEP] 'medium' [SEP] 'large' [SEP] 'large tall' [SEP] 'x-large' [SEP] 'x-large tall' [SEP] 'xx-large' [SEP] 'xx-large big tall' [SEP] '3x-large big' [SEP] '3x-large big tall' [SEP] '4x-large big' [SEP] '4x-large big tall' [SEP] '5x-large big' [SEP] 'Legendary Whitetails Men's Non-Typical Long Sleeve T-Shirt' [SEP] 'Price: $10.52 to $40.5' [SEP] 'Rating: N.A.' [SEP] 'Description' [SEP] 'Features' [SEP] 'Reviews' [SEP] 'Buy Now'",
+      "'Back to Search' [SEP] '< Prev' [SEP] 'color' [SEP] 'army' [SEP] 'big game field camo' [SEP] 'black' [SEP] 'cardinal' [SEP] 'charcoal heather' [SEP] 'inferno' [SEP] 'mossy oak bottomland' [SEP] 'mossy oak country' [SEP] 'mossy oak country dna' [SEP] 'mossy oak coyote' [SEP] 'slate' [SEP] 'swamp' [SEP] 'turkey' [SEP] 'flag' [SEP] 'country' [SEP] 'fish' [SEP] 'size' [SEP] 'small' [SEP] 'medium' [SEP] 'large' [SEP] 'large tall' [SEP] 'x-large' [SEP] 'x-large tall' [SEP] 'xx-large' [SEP] 'xx-large big tall' [SEP] '3x-large big' [SEP] '3x-large big tall' [SEP] '4x-large big' [SEP] '4x-large big tall' [SEP] '5x-large big' [SEP] 'Legendary Whitetails Men's Non-Typical Long Sleeve T-Shirt' [SEP] 'Price: $10.52 to $40.5' [SEP] 'Rating: N.A.' [SEP] 'Description' [SEP] 'Features' [SEP] 'Reviews' [SEP] 'Buy Now'",
       "Rollout ended · episode reward 10.0"
     ],
     "skills": []
