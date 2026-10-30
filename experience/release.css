@@ -108,6 +108,7 @@
 .citation-icon { color: #9775bd; font-family: Georgia,serif; font-size: 68px; line-height: .82; }
 .citation-section h2 { font-size: 25px; font-weight: 650; }
 .citation-section p { margin-top: 8px; color: #716a7a; font-size: 16px; line-height: 1.7; }
+.citation-paper-link { color: #674a9b; font-weight: 650; text-decoration: underline; text-decoration-color: #bba7d2; text-underline-offset: 4px; }
 .citation-section pre { max-width: 100%; overflow: auto; margin-top: 14px; padding: 16px; border-radius: 12px; background: #fff; font-size: 14px; }
 @media(max-width:900px) { .training-curves-heading { align-items: start; flex-direction: column; gap: 19px; } .error-localization { grid-template-columns: 1fr; } }
 @media(max-width:700px) { .scale-results { padding: 23px 16px; margin-top: 42px; border-radius: 19px; } .scale-heading { display: block; } .scale-heading h3 { font-size: 29px; } .scale-heading p:not(.analysis-tag) { font-size: 16px; } .scale-model-chip { display: inline-flex; margin-top: 14px; } .scale-highlights { grid-template-columns: 1fr; gap: 10px; margin: 23px 0; } .scale-highlights article { padding: 16px 18px; } .scale-highlights strong { font-size: 42px; } .scale-table { font-size: 14px; } .scale-table th,.scale-table td { padding: 11px 10px; } .scale-swipe-hint { display: block; margin: 0 0 9px; color: #78698a; font-size: 13px; } .scale-figure { overflow-x: auto; } .scale-figure .figure-open { min-width: 760px; padding: 8px; } .scale-figure figcaption { font-size: 14px; } }

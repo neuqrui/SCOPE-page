@@ -130,6 +130,8 @@
     const paperUrl = safeWebUrl(config.paperUrl);
     if (paperLink && paperUrl) {
       paperLink.href = paperUrl;
+      paperLink.target = '_blank';
+      paperLink.rel = 'noopener noreferrer';
       paperLink.removeAttribute('aria-disabled');
       paperLink.classList.remove('is-placeholder');
       paperLink.querySelector('[data-i18n]').dataset.i18n = 'paper';
@@ -139,7 +141,6 @@
     if (bibtex && config.bibtex) {
       bibtex.textContent = config.bibtex;
       bibtex.hidden = false;
-      $('#citation-placeholder').hidden = true;
     }
     if (!config.anonymous) $('#publication-status').textContent = language === 'zh' ? '研究项目主页' : 'Research project';
   }

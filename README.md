@@ -4,10 +4,11 @@ Bilingual academic project page for **SCOPE: Selective Critical-Step On-Policy S
 
 - Project page: https://neuqrui.github.io/SCOPE-page/
 - Code: https://github.com/neuqrui/SCOPE
+- Paper: https://arxiv.org/abs/2610.38391
 - SFT models and datasets: https://huggingface.co/collections/neuqrui/scope
 - Training logs: https://swanlab.cn/@67r/scope-exp/v1/vy74zd/overview
 
-This is the **non-anonymous** page for the public SCOPE release. It shows the author list and affiliations from the updated manuscript, full main-result tables for three backbones, an interactive method walkthrough, ALFWorld / WebShop trajectory replays, and experiment figures. Each replay gallery contains four successful and two failed recorded episodes. ALFWorld scenes are text-based 3D reconstructions; WebShop illustrations are schematic. The paper URL and BibTeX remain placeholders until the preprint is posted.
+This is the **non-anonymous** page for the public SCOPE release. It shows the author list and affiliations from the updated manuscript, full main-result tables for three backbones, an interactive method walkthrough, ALFWorld / WebShop trajectory replays, experiment figures, the arXiv paper link, and its BibTeX citation. Each replay gallery contains four successful and two failed recorded episodes. ALFWorld scenes are text-based 3D reconstructions; WebShop illustrations are schematic.
 
 ## Preview locally
 
@@ -19,7 +20,7 @@ Open http://127.0.0.1:8000/. Use an HTTP server rather than opening index.html d
 
 ## Maintain
 
-- `config.js`: author names, public code/resource URLs, and eventual paper/BibTeX fields.
+- `config.js`: author names, public code/resource URLs, paper URL, and BibTeX entry.
 - `content.js` and `index.html`: bilingual copy and default English content.
 - `data.js`: complete main experimental results.
 - `method/`: interactive method walkthrough.
@@ -59,6 +60,6 @@ Copy is bilingual. All additions are dependency-free, use relative asset paths, 
 
 ### Public release figures and manuscript access
 
-The updated Figures 1, 5–7, and appendix Figures 9–10 were extracted from the revised manuscript supplied on 2026-10-27. Figure 5 shows interaction efficiency; Figure 6 shows the three parameter-sensitivity curves and task-wise heatmap. On phones, the three Figure 6 curves appear as separate crops from that same figure to preserve readable labels. Table 2 is reproduced as an accessible HTML table with the paper's values at training step 180. Figure 9 shows ALFWorld single-run validation for Qwen2.5-3B/7B; Figure 10 shows the same for WebShop. The page links to the live SwanLab training logs and Hugging Face collection. Figure captions follow the updated manuscript numbering. No manuscript PDF is deployed: only the paper link and citation placeholders are visible until release. Set `paperUrl` and `bibtex` in `config.js` when they are available. Explanatory animation notes remain in these maintenance instructions rather than in the visitor-facing presentation.
+The updated Figures 1, 5–7, and appendix Figures 9–10 were extracted from the revised manuscript supplied on 2026-10-27. Figure 5 shows interaction efficiency; Figure 6 shows the three parameter-sensitivity curves and task-wise heatmap. On phones, the three Figure 6 curves appear as separate crops from that same figure to preserve readable labels. Table 2 is reproduced as an accessible HTML table with the paper's values at training step 180. Figure 9 shows ALFWorld single-run validation for Qwen2.5-3B/7B; Figure 10 shows the same for WebShop. The page links to the live SwanLab training logs, Hugging Face collection, and arXiv preprint. Figure captions follow the updated manuscript numbering. No manuscript PDF is deployed; the paper button opens the arXiv record and the citation section displays its BibTeX entry. Explanatory animation notes remain in these maintenance instructions rather than in the visitor-facing presentation.
 
 `experience/navigation.js` maintains the left contents list while scrolling; on narrow screens it becomes an expandable contents control. Clicking or keyboard-activating the SCOPE wordmark emits a short particle burst when effects are enabled.

@@ -1,7 +1,7 @@
 // Public information for the non-anonymous project page.
 window.SCOPE_CONFIG = {
   title: 'SCOPE: Selective Critical-Step On-Policy Self-Distillation for Agentic Reinforcement Learning',
-  paperUrl: null,
+  paperUrl: 'https://arxiv.org/abs/2610.38391',
   anonymous: false,
   authors: [
     { name: 'Qirui Liu', affiliation: '1,*' },
@@ -16,5 +16,13 @@ window.SCOPE_CONFIG = {
   codeUrl: 'https://github.com/neuqrui/SCOPE',
   swanlabUrl: 'https://swanlab.cn/@67r/scope-exp/v1/vy74zd/overview?utm_source=website_qr&utm_medium=qr_scan',
   modelsUrl: 'https://huggingface.co/collections/neuqrui/scope',
-  bibtex: null,
+  bibtex: `@misc{liu2026scopeselectivecriticalsteponpolicy,
+      title={SCOPE: Selective Critical-Step On-Policy Self-Distillation for Agentic Reinforcement Learning},
+      author={Qirui Liu and Wei Cao and Yu Mi and Yichen Sun and Xuekun Zhang and Lei Liu and Yue Shen and Zhixuan Chu},
+      year={2026},
+      eprint={2610.38391},
+      archivePrefix={arXiv},
+      primaryClass={cs.AI},
+      url={https://arxiv.org/abs/2610.38391},
+}`,
 };
